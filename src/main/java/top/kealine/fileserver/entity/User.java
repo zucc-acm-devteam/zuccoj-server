@@ -1,4 +1,4 @@
-package top.kealine.filesever.entity;
+package top.kealine.fileserver.entity;
 
 public class User {
     private String username;

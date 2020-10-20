@@ -1,10 +1,10 @@
-package top.kealine.filesever;
+package top.kealine.fileserver;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class FileSeverApplicationTests {
+class FileServerApplicationTests {
 
     @Test
     void contextLoads() {

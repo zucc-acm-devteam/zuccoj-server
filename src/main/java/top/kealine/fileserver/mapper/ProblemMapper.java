@@ -1,8 +1,8 @@
-package top.kealine.filesever.mapper;
+package top.kealine.fileserver.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
-import top.kealine.filesever.entity.Problem;
+import top.kealine.fileserver.entity.Problem;
 
 import java.util.List;
 

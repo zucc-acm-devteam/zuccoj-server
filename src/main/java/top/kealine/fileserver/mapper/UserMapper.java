@@ -1,8 +1,8 @@
-package top.kealine.filesever.mapper;
+package top.kealine.fileserver.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
-import top.kealine.filesever.entity.User;
+import top.kealine.fileserver.entity.User;
 
 @Mapper
 public interface UserMapper {

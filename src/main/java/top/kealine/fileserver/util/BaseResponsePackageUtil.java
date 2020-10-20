@@ -1,4 +1,4 @@
-package top.kealine.filesever.util;
+package top.kealine.fileserver.util;
 
 import com.google.common.collect.ImmutableMap;
 

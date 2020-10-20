@@ -1,4 +1,4 @@
-package top.kealine.filesever.entity;
+package top.kealine.fileserver.entity;
 
 public class Testcase {
     private int testcaseId;

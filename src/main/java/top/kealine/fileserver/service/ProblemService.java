@@ -1,9 +1,9 @@
-package top.kealine.filesever.service;
+package top.kealine.fileserver.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import top.kealine.filesever.entity.Problem;
-import top.kealine.filesever.mapper.ProblemMapper;
+import top.kealine.fileserver.entity.Problem;
+import top.kealine.fileserver.mapper.ProblemMapper;
 
 import java.util.List;
 

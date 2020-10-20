@@ -1,9 +1,9 @@
-package top.kealine.filesever.service;
+package top.kealine.fileserver.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import top.kealine.filesever.entity.User;
-import top.kealine.filesever.mapper.UserMapper;
+import top.kealine.fileserver.entity.User;
+import top.kealine.fileserver.mapper.UserMapper;
 
 import javax.servlet.http.HttpSession;
 

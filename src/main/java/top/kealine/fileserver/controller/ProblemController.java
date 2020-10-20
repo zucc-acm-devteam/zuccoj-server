@@ -1,13 +1,13 @@
-package top.kealine.filesever.controller;
+package top.kealine.fileserver.controller;
 
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import top.kealine.filesever.service.ProblemService;
-import top.kealine.filesever.service.UserService;
-import top.kealine.filesever.util.BaseResponsePackageUtil;
+import top.kealine.fileserver.service.ProblemService;
+import top.kealine.fileserver.service.UserService;
+import top.kealine.fileserver.util.BaseResponsePackageUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
