@@ -1,5 +1,7 @@
 package top.kealine.fileserver.entity;
 
+import top.kealine.fileserver.literal.PermissionLevel;
+
 public class User {
     private String username;
     private String nickname;
@@ -39,11 +41,11 @@ public class User {
     }
 
     public boolean isAvailable() {
-        return status > 0;
+        return status > PermissionLevel.FORBIDDEN;
     }
 
     public boolean isAdmin() {
-        return status == 999;
+        return status >= PermissionLevel.ADMIN;
     }
 
 }
