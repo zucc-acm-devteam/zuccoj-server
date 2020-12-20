@@ -11,6 +11,16 @@ public interface ProblemMapper {
     @Select("SELECT COUNT(*) FROM problems")
     int getProblemCount();
 
-    @Select("SELECT problem_id problemId, title FROM problems LIMIT #{offset}, #{size}")
+    @Select("SELECT \n" +
+            "problems.problem_id problemId, title, time_limit timeLimit,memory_limit memoryLimit, t1.cnt testcaseCnt\n" +
+            "FROM problems LEFT JOIN\n" +
+            "(SELECT\n" +
+            "testcases.problem_id, COUNT(1) cnt\n" +
+            "FROM\n" +
+            "testcases\n" +
+            "GROUP BY \n" +
+            "testcases.problem_id) t1\n" +
+            "ON problems.problem_id = t1.problem_id\n" +
+            "LIMIT #{offset}, #{size}")
     List<Problem> getProblemByPaging(int offset, int size);
 }

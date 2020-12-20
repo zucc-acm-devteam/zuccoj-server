@@ -11,11 +11,15 @@ public class BaseResponsePackageUtil {
     }
 
     public static Map<String, Object> errorMessage(String msg) {
+        return errorMessage(msg, 0);
+    }
+
+    public static Map<String, Object> errorMessage(String msg, int code) {
         if (msg==null || "".equals(msg)) {
             msg = "Unknown Error";
         }
         return ImmutableMap.of(
-                "code", 0,
+                "code", code,
                 "msg", msg
         );
     }

@@ -26,7 +26,7 @@ public class ProblemController {
         this.problemService = problemService;
     }
 
-    @RequestMapping(value = "/get", method = RequestMethod.GET)
+    @RequestMapping(value = "/get", method = {RequestMethod.GET, RequestMethod.POST})
     public Map<String, Object> get(
             @RequestParam(name = "page", required = true) int page,
             @RequestParam(name = "pageSize", required = true) int pageSize,

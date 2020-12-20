@@ -1,14 +1,11 @@
 package top.kealine.fileserver.controller;
 
-import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import top.kealine.fileserver.entity.Testcase;
 import top.kealine.fileserver.literal.PermissionLevel;
-import top.kealine.fileserver.service.ProblemService;
 import top.kealine.fileserver.service.TestcaseService;
 import top.kealine.fileserver.service.UserService;
 import top.kealine.fileserver.util.BaseResponsePackageUtil;

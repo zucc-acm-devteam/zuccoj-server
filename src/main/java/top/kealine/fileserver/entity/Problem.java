@@ -3,6 +3,9 @@ package top.kealine.fileserver.entity;
 public class Problem {
     private int problemId;
     private String title;
+    private int timeLimit;
+    private int memoryLimit;
+    private int testcaseCnt;
 
     public int getProblemId() {
         return problemId;
@@ -20,11 +23,27 @@ public class Problem {
         this.title = title;
     }
 
-    @Override
-    public String toString() {
-        return "Problem{" +
-                "problemId=" + problemId +
-                ", title='" + title + '\'' +
-                '}';
+    public int getTimeLimit() {
+        return timeLimit;
+    }
+
+    public void setTimeLimit(int timeLimit) {
+        this.timeLimit = timeLimit;
+    }
+
+    public int getMemoryLimit() {
+        return memoryLimit;
+    }
+
+    public void setMemoryLimit(int memoryLimit) {
+        this.memoryLimit = memoryLimit;
+    }
+
+    public int getTestcaseCnt() {
+        return testcaseCnt;
+    }
+
+    public void setTestcaseCnt(int testcaseCnt) {
+        this.testcaseCnt = testcaseCnt;
     }
 }
