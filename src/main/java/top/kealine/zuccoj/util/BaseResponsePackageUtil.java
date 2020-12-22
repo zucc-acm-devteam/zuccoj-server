@@ -1,4 +1,4 @@
-package top.kealine.fileserver.util;
+package top.kealine.zuccoj.util;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -39,6 +39,9 @@ public class BaseResponsePackageUtil {
     }
 
     public static Map<String, Object> baseData(Object data) {
+        if (data == null) {
+            data = "null";
+        }
         return ImmutableMap.of(
                 "code", 200,
                 "data", data

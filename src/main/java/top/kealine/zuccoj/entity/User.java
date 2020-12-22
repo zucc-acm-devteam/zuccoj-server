@@ -1,6 +1,6 @@
-package top.kealine.fileserver.entity;
+package top.kealine.zuccoj.entity;
 
-import top.kealine.fileserver.literal.PermissionLevel;
+import top.kealine.zuccoj.constant.PermissionLevel;
 
 public class User {
     private String username;

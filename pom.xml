@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>top.kealine</groupId>
-    <artifactId>zuccoj-fileserver</artifactId>
+    <artifactId>zuccoj-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>zuccoj-fileserver</name>
-    <description>FileServer for ZUCC-Online-Judge</description>
+    <name>zuccoj-server</name>
+    <description>Server for ZUCC-Online-Judge</description>
 
     <properties>
         <java.version>1.8</java.version>

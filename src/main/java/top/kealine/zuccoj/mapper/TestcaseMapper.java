@@ -1,10 +1,10 @@
-package top.kealine.fileserver.mapper;
+package top.kealine.zuccoj.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
-import top.kealine.fileserver.entity.Testcase;
+import top.kealine.zuccoj.entity.Testcase;
 
 import java.util.List;
 

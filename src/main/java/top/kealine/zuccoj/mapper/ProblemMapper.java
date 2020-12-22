@@ -1,8 +1,8 @@
-package top.kealine.fileserver.mapper;
+package top.kealine.zuccoj.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
-import top.kealine.fileserver.entity.Problem;
+import top.kealine.zuccoj.entity.Problem;
 
 import java.util.List;
 

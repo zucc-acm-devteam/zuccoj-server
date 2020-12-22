@@ -1,4 +1,4 @@
-package top.kealine.fileserver.config;
+package top.kealine.zuccoj.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

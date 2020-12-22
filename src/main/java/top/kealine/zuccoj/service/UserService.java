@@ -1,10 +1,10 @@
-package top.kealine.fileserver.service;
+package top.kealine.zuccoj.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import top.kealine.fileserver.entity.User;
-import top.kealine.fileserver.literal.PermissionLevel;
-import top.kealine.fileserver.mapper.UserMapper;
+import top.kealine.zuccoj.entity.User;
+import top.kealine.zuccoj.constant.PermissionLevel;
+import top.kealine.zuccoj.mapper.UserMapper;
 
 import javax.servlet.http.HttpSession;
 

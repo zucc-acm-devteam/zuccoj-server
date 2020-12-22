@@ -1,13 +1,14 @@
-package top.kealine.fileserver.controller;
+package top.kealine.zuccoj.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import top.kealine.fileserver.entity.User;
-import top.kealine.fileserver.service.UserService;
-import top.kealine.fileserver.util.BaseResponsePackageUtil;
+import top.kealine.zuccoj.constant.ResponseConstant;
+import top.kealine.zuccoj.entity.User;
+import top.kealine.zuccoj.service.UserService;
+import top.kealine.zuccoj.util.BaseResponsePackageUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -30,31 +31,27 @@ public class UserController {
             HttpServletRequest request) {
         User user = userService.getUserByUsername(username);
         if (user == null) {
-            return BaseResponsePackageUtil.errorMessage(String.format("User %s Don't Exist.", username));
+            return ResponseConstant.X_USER_NOT_FOUND;
         }
         if (!userService.checkUser(user, password)) {
-            return BaseResponsePackageUtil.errorMessage("Wrong Password");
-        }
-        // FileSever User Must Be Admin
-        if (!user.isAdmin()) {
-            return BaseResponsePackageUtil.errorMessage("Access Denied");
+            return ResponseConstant.X_USER_WRONG_PASSWORD;
         }
         userService.saveUserToSession(request.getSession(), user);
         user.setPassword("");
-        return BaseResponsePackageUtil.baseData(user);
+        return ResponseConstant.V_USER_LOGIN_SUCCESS;
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
     public Map<String, Object> logout(HttpServletRequest request) {
         userService.deleteUserFromSession(request.getSession());
-        return BaseResponsePackageUtil.succeedMessage("Logout Successfully");
+        return ResponseConstant.V_USER_LOGOUT_SUCCESS;
     }
 
     @RequestMapping(value = "/get", method = RequestMethod.GET)
     public Map<String, Object> get(HttpServletRequest request) {
         User user = userService.getUserFromSession(request.getSession());
         if (user == null) {
-            return BaseResponsePackageUtil.errorMessage("Please Login First");
+            return ResponseConstant.X_USER_LOGIN_FIRST;
         }
         user.setPassword("");
         return BaseResponsePackageUtil.baseData(user);

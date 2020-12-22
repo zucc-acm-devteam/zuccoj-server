@@ -1,9 +1,9 @@
-package top.kealine.fileserver.service;
+package top.kealine.zuccoj.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import top.kealine.fileserver.entity.Testcase;
-import top.kealine.fileserver.mapper.TestcaseMapper;
+import top.kealine.zuccoj.entity.Testcase;
+import top.kealine.zuccoj.mapper.TestcaseMapper;
 
 import java.util.List;
 
