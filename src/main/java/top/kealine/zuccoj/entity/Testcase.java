@@ -7,6 +7,8 @@ public class Testcase {
     private String outputFilename;
     private String inputMD5;
     private String outputMD5;
+    private long inputSize;
+    private long outputSize;
 
     public int getTestcaseId() {
         return testcaseId;
@@ -54,5 +56,21 @@ public class Testcase {
 
     public void setOutputMD5(String outputMD5) {
         this.outputMD5 = outputMD5;
+    }
+
+    public long getInputSize() {
+        return inputSize;
+    }
+
+    public void setInputSize(long inputSize) {
+        this.inputSize = inputSize;
+    }
+
+    public long getOutputSize() {
+        return outputSize;
+    }
+
+    public void setOutputSize(long outputSize) {
+        this.outputSize = outputSize;
     }
 }
