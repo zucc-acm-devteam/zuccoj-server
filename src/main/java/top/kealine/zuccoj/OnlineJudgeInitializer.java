@@ -26,6 +26,10 @@ public class OnlineJudgeInitializer implements ApplicationRunner {
         if (!fileDir.exists()) {
             fileDir.mkdir();
         }
+        File tempDir = new File(config.tempDir);
+        if (!tempDir.exists()) {
+            tempDir.mkdir();
+        }
     }
 
     @Override

@@ -1,6 +1,5 @@
 package top.kealine.zuccoj.service;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,6 +25,10 @@ public class TestcaseService {
         return testcaseMapper.getTestcaseByProblemId(problemId);
     }
 
+    public Testcase getTestcase(int testcaseId) {
+        return testcaseMapper.getTestcase(testcaseId);
+    }
+
     public String getTestcasePath(int problemId, int testcaseId, boolean input) {
         return onlineJudgeConfig.dataDir + problemId + onlineJudgeConfig.separator + testcaseId + (input?".in":".ans");
     }
@@ -47,8 +50,8 @@ public class TestcaseService {
         try {
             String inputName = input.getOriginalFilename();
             String outputName = output.getOriginalFilename();
-            String inputMD5 = DigestUtils.md5Hex(input.getInputStream());
-            String outputMD5 = DigestUtils.md5Hex(output.getInputStream());
+            String inputMD5 = ServerFileUtil.md5Hex(input);
+            String outputMD5 = ServerFileUtil.md5Hex(output);
             long inputSize = input.getSize();
             long outputSize = output.getSize();
 

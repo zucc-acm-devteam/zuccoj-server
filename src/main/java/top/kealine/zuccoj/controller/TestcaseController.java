@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import top.kealine.zuccoj.constant.PermissionLevel;
 import top.kealine.zuccoj.constant.ResponseConstant;
+import top.kealine.zuccoj.entity.Testcase;
 import top.kealine.zuccoj.service.TestcaseService;
 import top.kealine.zuccoj.service.UserService;
 import top.kealine.zuccoj.util.BaseResponsePackageUtil;
@@ -83,17 +84,27 @@ public class TestcaseController {
     public ResponseEntity<FileSystemResource> downloadOne(
             @RequestParam(name = "id", required = true) int testcaseId,
             @RequestParam(name = "input", required = true) boolean isInput,
+            @RequestParam(name = "md5", required = false) String md5,
             HttpServletRequest request
     ) {
         if (!userService.checkUserPermission(request.getSession(), PermissionLevel.DATA_VIEWER)) {
             return ResponseEntity.status(403).build();
         }
-        if (!testcaseService.hasTestcase(testcaseId)) {
+        Testcase testcase = testcaseService.getTestcase(testcaseId);
+        if (testcase == null) {
             return ResponseEntity.notFound().build();
         }
         File file = new File(testcaseService.getTestcasePath(testcaseId, isInput));
         if (!file.exists()) {
             return ResponseEntity.notFound().build();
+        }
+
+        // For judgehost: if the md5 of local data is the newest, return [NoContent]
+        if (md5 != null) {
+            String newestMD5 = isInput?testcase.getInputMD5():testcase.getOutputMD5();
+            if (md5.equals(newestMD5)) {
+                return ResponseEntity.noContent().build();
+            }
         }
 
         HttpHeaders headers = new HttpHeaders();
