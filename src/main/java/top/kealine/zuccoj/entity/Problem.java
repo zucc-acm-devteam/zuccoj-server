@@ -3,9 +3,16 @@ package top.kealine.zuccoj.entity;
 public class Problem {
     private int problemId;
     private String title;
+    private String description;
+    private String input;
+    private String output;
+    private String hint;
     private int timeLimit;
     private int memoryLimit;
-    private int testcaseCnt;
+    private boolean spj;
+    private boolean visible;
+    private String samples;
+    private String tags;
 
     public int getProblemId() {
         return problemId;
@@ -21,6 +28,38 @@ public class Problem {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getInput() {
+        return input;
+    }
+
+    public void setInput(String input) {
+        this.input = input;
+    }
+
+    public String getOutput() {
+        return output;
+    }
+
+    public void setOutput(String output) {
+        this.output = output;
+    }
+
+    public String getHint() {
+        return hint;
+    }
+
+    public void setHint(String hint) {
+        this.hint = hint;
     }
 
     public int getTimeLimit() {
@@ -39,11 +78,35 @@ public class Problem {
         this.memoryLimit = memoryLimit;
     }
 
-    public int getTestcaseCnt() {
-        return testcaseCnt;
+    public boolean isSpj() {
+        return spj;
     }
 
-    public void setTestcaseCnt(int testcaseCnt) {
-        this.testcaseCnt = testcaseCnt;
+    public void setSpj(boolean spj) {
+        this.spj = spj;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public String getSamples() {
+        return samples;
+    }
+
+    public void setSamples(String samples) {
+        this.samples = samples;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
     }
 }

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.kealine.zuccoj.config.OnlineJudgeConfig;
 import top.kealine.zuccoj.entity.Problem;
+import top.kealine.zuccoj.entity.ProblemInAdmin;
 import top.kealine.zuccoj.mapper.ProblemMapper;
 
 import java.io.File;
@@ -25,11 +26,17 @@ public class ProblemService {
         return problemMapper.getProblemCount();
     }
 
-    public List<Problem> getProblemsByPaging(int page, int pageSize) {
+    public List<ProblemInAdmin> getProblemsByPaging(int page, int pageSize) {
         return problemMapper.getProblemByPaging((page-1)*pageSize, pageSize);
     }
 
     public boolean newProblemDataDir(int id) {
         return new File(onlineJudgeConfig.dataDir + id + onlineJudgeConfig.separator).mkdir();
+    }
+
+    public int newProblem(Problem problem) {
+        problemMapper.newProblem(problem);
+        newProblemDataDir(problem.getProblemId());
+        return problem.getProblemId();
     }
 }
