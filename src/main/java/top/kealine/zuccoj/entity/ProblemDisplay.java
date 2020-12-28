@@ -1,18 +1,16 @@
 package top.kealine.zuccoj.entity;
 
-public class Problem{
+public class ProblemDisplay {
     private int problemId;
     private String title;
+    private int timeLimit;
+    private int memoryLimit;
     private String description;
     private String input;
     private String output;
     private String hint;
-    private int timeLimit;
-    private int memoryLimit;
-    private String spj;
-    private boolean visible;
     private String samples;
-    private String tags;
+    private boolean visible;
 
     public int getProblemId() {
         return problemId;
@@ -28,6 +26,22 @@ public class Problem{
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public int getTimeLimit() {
+        return timeLimit;
+    }
+
+    public void setTimeLimit(int timeLimit) {
+        this.timeLimit = timeLimit;
+    }
+
+    public int getMemoryLimit() {
+        return memoryLimit;
+    }
+
+    public void setMemoryLimit(int memoryLimit) {
+        this.memoryLimit = memoryLimit;
     }
 
     public String getDescription() {
@@ -62,38 +76,6 @@ public class Problem{
         this.hint = hint;
     }
 
-    public int getTimeLimit() {
-        return timeLimit;
-    }
-
-    public void setTimeLimit(int timeLimit) {
-        this.timeLimit = timeLimit;
-    }
-
-    public int getMemoryLimit() {
-        return memoryLimit;
-    }
-
-    public void setMemoryLimit(int memoryLimit) {
-        this.memoryLimit = memoryLimit;
-    }
-
-    public String getSpj() {
-        return spj;
-    }
-
-    public void setSpj(String spj) {
-        this.spj = spj;
-    }
-
-    public boolean isVisible() {
-        return visible;
-    }
-
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-    }
-
     public String getSamples() {
         return samples;
     }
@@ -102,11 +84,11 @@ public class Problem{
         this.samples = samples;
     }
 
-    public String getTags() {
-        return tags;
+    public boolean isVisible() {
+        return visible;
     }
 
-    public void setTags(String tags) {
-        this.tags = tags;
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 }

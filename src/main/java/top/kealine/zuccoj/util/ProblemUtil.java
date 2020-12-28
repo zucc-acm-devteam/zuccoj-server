@@ -28,7 +28,7 @@ public class ProblemUtil {
         problem.setHint(hint);
         problem.setTimeLimit(timeLimit);
         problem.setMemoryLimit(memoryLimit);
-        problem.setSpj(spj != null);
+        problem.setSpj(spj);
         problem.setVisible(visible);
         problem.setSamples(samples);
         problem.setTags(tags);

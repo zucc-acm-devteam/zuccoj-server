@@ -24,6 +24,17 @@ public class UserController {
         this.userService = userService;
     }
 
+    @RequestMapping(value = "/check", method = {RequestMethod.POST, RequestMethod.GET})
+    public Map<String, Object> check(
+            @RequestParam(name = "level", required = true) int level,
+            HttpServletRequest request
+    ) {
+        if (!userService.checkUserPermission(request.getSession(), level)) {
+            return ResponseConstant.X_ACCESS_DENIED;
+        }
+        return BaseResponsePackageUtil.succeedMessage();
+    }
+
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Map<String, Object> login(
             @RequestParam(name = "username", required = true) String username,

@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import top.kealine.zuccoj.constant.PermissionLevel;
 import top.kealine.zuccoj.constant.ResponseConstant;
 import top.kealine.zuccoj.entity.Problem;
+import top.kealine.zuccoj.entity.ProblemDisplay;
+import top.kealine.zuccoj.entity.ProblemInfo;
 import top.kealine.zuccoj.service.ProblemService;
 import top.kealine.zuccoj.service.UserService;
 import top.kealine.zuccoj.util.BaseResponsePackageUtil;
@@ -29,8 +31,8 @@ public class ProblemController {
         this.problemService = problemService;
     }
 
-    @RequestMapping(value = "/get", method = {RequestMethod.GET, RequestMethod.POST})
-    public Map<String, Object> get(
+    @RequestMapping(value = "/getProblemListForAdmin", method = {RequestMethod.GET, RequestMethod.POST})
+    public Map<String, Object> getProblemListForAdmin(
             @RequestParam(name = "page", required = true) int page,
             @RequestParam(name = "pageSize", required = true) int pageSize,
             HttpServletRequest request
@@ -40,7 +42,7 @@ public class ProblemController {
         }
         return BaseResponsePackageUtil.baseData(
                 ImmutableMap.of(
-                        "problems", problemService.getProblemsByPaging(page, pageSize),
+                        "problems", problemService.getProblemListForAdmin(page, pageSize),
                         "count", problemService.getProblemsCount(),
                         "page", page
                         ));
@@ -65,7 +67,58 @@ public class ProblemController {
             return ResponseConstant.X_ACCESS_DENIED;
         }
         Problem problem = ProblemUtil.packageUp(-1, title, description, input, output, hint, timeLimit, memoryLimit, spj, visible, samples, tags);
-        problemService.newProblem(problem);
-        return BaseResponsePackageUtil.baseData(problem);
+        int problemId = problemService.newProblem(problem);
+        return BaseResponsePackageUtil.baseData(
+                ImmutableMap.of("problemId", problemId)
+        );
+    }
+
+    @RequestMapping(value = "/getProblemSet", method = {RequestMethod.GET, RequestMethod.POST})
+    public Map<String, Object> getProblemSet(
+            @RequestParam(name = "page", required = true) int page,
+            @RequestParam(name = "pageSize", required = true) int pageSize,
+            HttpServletRequest request
+    ) {
+        boolean showAll = userService.checkUserPermission(request.getSession(), PermissionLevel.ADMIN);
+        return BaseResponsePackageUtil.baseData(
+                ImmutableMap.of(
+                        "problems", problemService.getProblemInfoList(page, pageSize, showAll),
+                        "count", problemService.getProblemInfoListCount(showAll),
+                        "page", page
+                ));
+    }
+
+    @RequestMapping(value = "/info", method = {RequestMethod.GET, RequestMethod.POST})
+    public Map<String, Object> getProblemInfo(
+            @RequestParam(name = "problemId", required = true) int problemId,
+            HttpServletRequest request
+    ) {
+        ProblemInfo info = problemService.getProblemInfo(problemId);
+        if (info == null) {
+            return ResponseConstant.X_NOT_FOUND;
+        }
+        if (!info.isVisible()) {
+            if (!userService.checkUserPermission(request.getSession(), PermissionLevel.ADMIN)) {
+                return ResponseConstant.X_ACCESS_DENIED;
+            }
+        }
+        return BaseResponsePackageUtil.baseData(info);
+    }
+
+    @RequestMapping(value = "/display", method = {RequestMethod.GET, RequestMethod.POST})
+    public Map<String, Object> getProblemDisplay(
+            @RequestParam(name = "problemId", required = true) int problemId,
+            HttpServletRequest request
+    ) {
+        ProblemDisplay display = problemService.getProblemDisplay(problemId);
+        if (display == null) {
+            return ResponseConstant.X_NOT_FOUND;
+        }
+        if (!display.isVisible()) {
+            if (!userService.checkUserPermission(request.getSession(), PermissionLevel.ADMIN)) {
+                return ResponseConstant.X_ACCESS_DENIED;
+            }
+        }
+        return BaseResponsePackageUtil.baseData(display);
     }
 }
