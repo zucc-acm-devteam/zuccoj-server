@@ -11,6 +11,7 @@ public class Solution {
     private int timeUsed;
     private int codeLength;
     private int lang;
+    private String remark;
 
     public long getSolutionId() {
         return solutionId;
@@ -90,5 +91,13 @@ public class Solution {
 
     public void setLang(int lang) {
         this.lang = lang;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

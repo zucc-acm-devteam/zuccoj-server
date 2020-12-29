@@ -24,9 +24,17 @@ public class ResponseConstant {
     public static final Map<String, Object> X_DELETE_FAILED = BaseResponsePackageUtil.errorMessage("删除失败");
     public static final Map<String, Object> V_DELETE_SUCCESS = BaseResponsePackageUtil.succeedMessage("删除成功");
 
+
+    // Solution
+
+    public static final Map<String, Object> X_LANGUAGE_NOT_SUPPORTED = BaseResponsePackageUtil.errorMessage("该语言不支持");
+
+
     // Any
     public static final Map<String, Object> X_NOT_FOUND = BaseResponsePackageUtil.errorMessage("资源不存在", 404);
     public static final Map<String, Object> X_BAD_REQUEST = BaseResponsePackageUtil.errorMessage("请求参数错误", 400);
+
+
 
 
 }

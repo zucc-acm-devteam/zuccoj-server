@@ -55,6 +55,10 @@ public class UserService {
             return true;
         }
         User user = getUserFromSession(session);
+        return checkUserPermission(user, permissionLevel);
+    }
+
+    public boolean checkUserPermission(User user, int permissionLevel) {
         if (user == null) {
             return false;
         }
