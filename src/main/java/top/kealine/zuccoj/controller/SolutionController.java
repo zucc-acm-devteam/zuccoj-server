@@ -12,6 +12,7 @@ import top.kealine.zuccoj.constant.SupportedLanguage;
 import top.kealine.zuccoj.entity.ProblemInfo;
 import top.kealine.zuccoj.entity.Solution;
 import top.kealine.zuccoj.entity.SolutionResult;
+import top.kealine.zuccoj.entity.SolutionStatus;
 import top.kealine.zuccoj.entity.User;
 import top.kealine.zuccoj.service.ProblemService;
 import top.kealine.zuccoj.service.SolutionService;
@@ -19,6 +20,7 @@ import top.kealine.zuccoj.service.UserService;
 import top.kealine.zuccoj.util.BaseResponsePackageUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -95,5 +97,23 @@ public class SolutionController {
             return ResponseConstant.X_NOT_FOUND;
         }
         return BaseResponsePackageUtil.baseData(result);
+    }
+
+    @RequestMapping(value = "/status", method = RequestMethod.GET)
+    public Map<String, Object> getStatus(
+            @RequestParam(name = "offset", required = false) Integer offset,
+            @RequestParam(name = "size", required = false) Integer size
+    ) {
+        if (offset == null) {
+            offset = 0;
+        }
+        if (size == null) {
+            size = 20;
+        }
+        List<SolutionStatus> statuses = solutionService.getSolutionStatus(offset, size);
+        if (statuses == null || statuses.size() == 0) {
+            return ResponseConstant.X_NOT_FOUND;
+        }
+        return BaseResponsePackageUtil.baseData(statuses);
     }
 }

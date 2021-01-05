@@ -5,7 +5,10 @@ import org.springframework.stereotype.Service;
 import top.kealine.zuccoj.constant.JudgeResult;
 import top.kealine.zuccoj.entity.Solution;
 import top.kealine.zuccoj.entity.SolutionResult;
+import top.kealine.zuccoj.entity.SolutionStatus;
 import top.kealine.zuccoj.mapper.SolutionMapper;
+
+import java.util.List;
 
 @Service
 public class SolutionService {
@@ -35,5 +38,9 @@ public class SolutionService {
 
     public SolutionResult getSolutionResultById(long solutionId) {
         return solutionMapper.getSolutionResultById(solutionId);
+    }
+
+    public List<SolutionStatus> getSolutionStatus(int offset, int size) {
+        return solutionMapper.getSolutionStatus(offset, size);
     }
 }

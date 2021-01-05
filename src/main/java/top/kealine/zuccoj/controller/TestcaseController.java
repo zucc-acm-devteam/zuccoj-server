@@ -16,6 +16,7 @@ import top.kealine.zuccoj.entity.Testcase;
 import top.kealine.zuccoj.service.TestcaseService;
 import top.kealine.zuccoj.service.UserService;
 import top.kealine.zuccoj.util.BaseResponsePackageUtil;
+import top.kealine.zuccoj.util.HttpUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -84,7 +85,6 @@ public class TestcaseController {
     public ResponseEntity<FileSystemResource> downloadOne(
             @RequestParam(name = "id", required = true) int testcaseId,
             @RequestParam(name = "input", required = true) boolean isInput,
-            @RequestParam(name = "md5", required = false) String md5,
             HttpServletRequest request
     ) {
         if (!userService.checkUserPermission(request.getSession(), PermissionLevel.DATA_VIEWER)) {
@@ -99,21 +99,7 @@ public class TestcaseController {
             return ResponseEntity.notFound().build();
         }
 
-        // For judgehost: if the md5 of local data is the newest, return [NoContent]
-        if (md5 != null) {
-            String newestMD5 = isInput?testcase.getInputMD5():testcase.getOutputMD5();
-            if (md5.equals(newestMD5)) {
-                return ResponseEntity.noContent().build();
-            }
-        }
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
-        headers.add("Content-Disposition", "attachment; filename=" + testcaseId + (isInput?".in":".ans"));
-        headers.add("Pragma", "no-cache");
-        headers.add("Expires", "0");
-        headers.add("Last-Modified", new Date().toString());
-        headers.add("ETag", String.valueOf(System.currentTimeMillis()));
+        HttpHeaders headers = HttpUtil.fileHeaders(testcaseId + (isInput?".in":".ans"));
 
         return ResponseEntity .ok() .headers(headers) .contentLength(file.length()) .contentType(MediaType.parseMediaType("application/octet-stream")) .body(new FileSystemResource(file));
     }
