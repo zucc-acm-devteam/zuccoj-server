@@ -12,6 +12,7 @@ public class Solution {
     private int codeLength;
     private int lang;
     private String remark;
+    private String judgehost;
 
     public long getSolutionId() {
         return solutionId;
@@ -99,5 +100,13 @@ public class Solution {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getJudgehost() {
+        return judgehost;
+    }
+
+    public void setJudgehost(String judgehost) {
+        this.judgehost = judgehost;
     }
 }

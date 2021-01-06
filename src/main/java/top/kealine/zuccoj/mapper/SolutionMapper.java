@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import top.kealine.zuccoj.entity.JudgeTask;
 import top.kealine.zuccoj.entity.Solution;
 import top.kealine.zuccoj.entity.SolutionResult;
 import top.kealine.zuccoj.entity.SolutionStatus;
@@ -17,7 +18,7 @@ public interface SolutionMapper {
     void newSolution(Solution solution);
 
     @Select("SELECT solution_id solutionId, problem_id problemId, username, code, submit_time submitTime, result, " +
-            "memory_used memoryUsed, time_used timeUsed, code_length codeLength, lang, remark " +
+            "memory_used memoryUsed, time_used timeUsed, code_length codeLength, lang, remark, judgehost " +
             "FROM solutions WHERE solution_id = #{solutionId}")
     Solution getSolutionById(long solutionId);
 
@@ -30,4 +31,9 @@ public interface SolutionMapper {
 
     @Select("SELECT solution_id solutionId, result, memory_used memoryUsed, time_used timeUsed, remark FROM solutions WHERE solution_id = #{solutionId}")
     SolutionResult getSolutionResultById(long solutionId);
+
+    @Select("SELECT time_limit timeLimit, memory_limit memoryLimit, solutionId, code, lang, problemId FROM problems " +
+            "JOIN (SELECT solution_id solutionId, code, lang, solutions.problem_id problemId FROM solutions WHERE solution_id=1) solution " +
+            "ON problems.problem_id = solution.problemId")
+    JudgeTask generateJudgeTask(long solutionId);
 }

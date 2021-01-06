@@ -51,4 +51,7 @@ public interface TestcaseMapper {
 
     @Select("SELECT problem_id FROM testcases WHERE testcase_id=#{testcaseId}")
     int getProblemIdByTestcaseId(int testcaseId);
+
+    @Select("SELECT testcase_id FROM testcases WHERE problem_id=#{problemId}")
+    List<Integer> getTestcaseIdByProblemId(int problemId);
 }

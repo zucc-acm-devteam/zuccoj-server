@@ -1,5 +1,6 @@
 package top.kealine.zuccoj.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +44,7 @@ public class SolutionController {
             @RequestParam(name = "lang", required = true) int lang,
             @RequestParam(name = "code", required = true) String code,
             HttpServletRequest request
-    ) {
+    ) throws JsonProcessingException {
         User user = userService.getUserFromSession(request.getSession());
         if (user == null) {
             return ResponseConstant.X_USER_LOGIN_FIRST;
@@ -64,6 +65,7 @@ public class SolutionController {
         }
 
         long solutionId = solutionService.newSolution(problemId, user.getUsername(), code, lang);
+        solutionService.publishTask(solutionId);
         return BaseResponsePackageUtil.baseData(ImmutableMap.of("solutionId", solutionId));
     }
 

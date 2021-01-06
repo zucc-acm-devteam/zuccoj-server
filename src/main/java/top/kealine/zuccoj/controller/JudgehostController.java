@@ -80,7 +80,7 @@ public class JudgehostController {
     }
 
 
-    @RequestMapping(value = "testcase", method = RequestMethod.GET)
+    @RequestMapping(value = "/testcase", method = RequestMethod.POST)
     public ResponseEntity<FileSystemResource> downloadTestcase(
             @RequestParam(name = "judgehost", required = true) String judgehost,
             @RequestParam(name = "key", required = true) String key,

@@ -1,5 +1,6 @@
 package top.kealine.zuccoj.util;
 
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Base64;
 
@@ -8,7 +9,7 @@ public class PasswordUtil {
         try {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
             Base64.Encoder base64Encoder = Base64.getEncoder();
-            return base64Encoder.encodeToString(md5.digest(password.getBytes("utf-8")));
+            return base64Encoder.encodeToString(md5.digest(password.getBytes(StandardCharsets.UTF_8)));
         } catch (Exception e) {
             e.printStackTrace();
         }
