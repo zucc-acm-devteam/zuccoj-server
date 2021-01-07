@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 import top.kealine.zuccoj.constant.PermissionLevel;
 import top.kealine.zuccoj.constant.ResponseConstant;
 import top.kealine.zuccoj.entity.Judgehost;
+import top.kealine.zuccoj.entity.SolutionResult;
 import top.kealine.zuccoj.entity.Testcase;
 import top.kealine.zuccoj.service.JudgehostService;
+import top.kealine.zuccoj.service.SolutionService;
 import top.kealine.zuccoj.service.TestcaseService;
 import top.kealine.zuccoj.service.UserService;
 import top.kealine.zuccoj.util.BaseResponsePackageUtil;
@@ -31,12 +33,19 @@ public class JudgehostController {
     private final JudgehostService judgehostService;
     private final UserService userService;
     private final TestcaseService testcaseService;
+    private final SolutionService solutionService;
 
     @Autowired
-    JudgehostController(JudgehostService judgehostService, UserService userService, TestcaseService testcaseService) {
+    JudgehostController(
+            JudgehostService judgehostService,
+            UserService userService,
+            TestcaseService testcaseService,
+            SolutionService solutionService
+    ) {
         this.judgehostService = judgehostService;
         this.userService = userService;
         this.testcaseService = testcaseService;
+        this.solutionService = solutionService;
     }
 
     @RequestMapping(value = "/new", method = RequestMethod.POST)
@@ -91,7 +100,7 @@ public class JudgehostController {
     ) {
         String ip = IpUtil.getIpAddr(request);
         String token = judgehostService.getToken(judgehost);
-        if (token == null) {
+        if (!judgehostService.checkKey(token, key)) {
             judgehostService.log(judgehost, ip, String.format("Failed get testcase [700], key=%s", key));
             return ResponseEntity.status(700).build();
         }
@@ -118,5 +127,26 @@ public class JudgehostController {
         return ResponseEntity .ok() .headers(headers) .contentLength(file.length()) .contentType(MediaType.parseMediaType("application/octet-stream")) .body(new FileSystemResource(file));
     }
 
+    @RequestMapping(value = "/judge", method = RequestMethod.POST)
+    public Map<String, Object> judge(
+            @RequestParam(name = "judgehost", required = true) String judgehost,
+            @RequestParam(name = "key", required = true) String key,
+            @RequestParam(name = "solutionId", required = true) long solutionId,
+            @RequestParam(name = "result", required = true) int result,
+            @RequestParam(name = "memoryUsed", required = true) int memoryUsed,
+            @RequestParam(name = "timeUsed", required = true) int timeUsed,
+            @RequestParam(name = "remark", required = true) String remark,
+            HttpServletRequest request
+    ) {
+        String ip = IpUtil.getIpAddr(request);
+        String token = judgehostService.getToken(judgehost);
+        if (!judgehostService.checkKey(token, key)) {
+            judgehostService.log(judgehost, ip, String.format("Failed judge [700], key=%s", key));
+            return ResponseConstant.X_JUDGEHOST_DUE;
+        }
+        solutionService.updateSolutionResult(new SolutionResult(solutionId, result, memoryUsed, timeUsed, remark, judgehost));
+        judgehostService.log(judgehost, ip, String.format("Judged, solutionId=%s, result=%s, memoryUsed=%s, timeUsed=%s, remark=%s, judgehost=%s", solutionId, result, memoryUsed, timeUsed, remark, judgehost));
+        return BaseResponsePackageUtil.succeedMessage();
+    }
 
 }

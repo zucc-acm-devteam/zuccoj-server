@@ -45,6 +45,9 @@ public class JudgehostService {
     }
 
     public boolean checkKey(String token, String key) {
+        if (token == null || key == null) {
+            return false;
+        }
         return PasswordUtil.checkToken(token, key);
     }
 

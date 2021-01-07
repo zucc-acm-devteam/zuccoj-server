@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import top.kealine.zuccoj.entity.JudgeTask;
 import top.kealine.zuccoj.entity.Solution;
 import top.kealine.zuccoj.entity.SolutionResult;
@@ -29,11 +30,14 @@ public interface SolutionMapper {
             "ORDER BY solution_id DESC LIMIT #{offset}, #{size}")
     List<SolutionStatus> getSolutionStatus(int offset, int size);
 
-    @Select("SELECT solution_id solutionId, result, memory_used memoryUsed, time_used timeUsed, remark FROM solutions WHERE solution_id = #{solutionId}")
+    @Select("SELECT solution_id solutionId, result, memory_used memoryUsed, time_used timeUsed, remark, judgehost FROM solutions WHERE solution_id = #{solutionId}")
     SolutionResult getSolutionResultById(long solutionId);
 
     @Select("SELECT time_limit timeLimit, memory_limit memoryLimit, solutionId, code, lang, problemId FROM problems " +
-            "JOIN (SELECT solution_id solutionId, code, lang, solutions.problem_id problemId FROM solutions WHERE solution_id=1) solution " +
+            "JOIN (SELECT solution_id solutionId, code, lang, solutions.problem_id problemId FROM solutions WHERE solution_id = #{solutionId}) solution " +
             "ON problems.problem_id = solution.problemId")
     JudgeTask generateJudgeTask(long solutionId);
+
+    @Update("UPDATE solutions SET result=#{result}, memory_used=#{memoryUsed}, time_used=#{timeUsed}, remark=#{remark}, judgehost=#{judgehost} WHERE solution_id=#{solutionId}")
+    void updateSolutionResult(SolutionResult solutionResult);
 }

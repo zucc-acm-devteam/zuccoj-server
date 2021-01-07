@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import top.kealine.zuccoj.constant.JudgeResult;
 import top.kealine.zuccoj.entity.JudgeTask;
@@ -72,4 +71,9 @@ public class SolutionService {
         ListOperations<String,String> ops = redisTemplate.opsForList();
         ops.leftPush(JUDGE_TASK_QUEUE_KEY, judgeTaskString);
     }
+
+    public void updateSolutionResult(SolutionResult solutionResult) {
+        solutionMapper.updateSolutionResult(solutionResult);
+    }
+
 }

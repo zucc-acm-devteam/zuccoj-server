@@ -6,6 +6,17 @@ public class SolutionResult {
     private int memoryUsed;
     private int timeUsed;
     private String remark;
+    private String judgehost;
+
+    public SolutionResult() {}
+    public SolutionResult(long solutionId, int result, int memoryUsed, int timeUsed, String remark, String judgehost) {
+        this.solutionId = solutionId;
+        this.result = result;
+        this.memoryUsed = memoryUsed;
+        this.timeUsed = timeUsed;
+        this.remark = remark;
+        this.judgehost = judgehost;
+    }
 
     public long getSolutionId() {
         return solutionId;
@@ -45,5 +56,13 @@ public class SolutionResult {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getJudgehost() {
+        return judgehost;
+    }
+
+    public void setJudgehost(String judgehost) {
+        this.judgehost = judgehost;
     }
 }
