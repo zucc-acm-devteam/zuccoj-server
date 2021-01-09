@@ -5,10 +5,13 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import top.kealine.zuccoj.entity.Judgehost;
+import top.kealine.zuccoj.entity.JudgehostStatus;
 import top.kealine.zuccoj.mapper.JudgehostMapper;
 import top.kealine.zuccoj.util.PasswordUtil;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 public class JudgehostService {
@@ -54,6 +57,21 @@ public class JudgehostService {
     public void newJudgehost(String name, String password) {
         String newPassword = PasswordUtil.encrypt(name+password);
         judgehostMapper.newJudgehost(name, newPassword);
+    }
+
+    public List<JudgehostStatus> getJudgehostStatus() {
+        List<Judgehost> judgehosts = judgehostMapper.getJudgehostList();
+        ValueOperations<String,String> ops = redisTemplate.opsForValue();
+        return judgehosts
+                .stream()
+                .map( judgehost ->
+                        new JudgehostStatus(
+                                judgehost.getJudgehostUsername(),
+                                ops.get(JudgehostStatus.JUDGEHOST_HEARTBEAT_KEY_PREFIX + judgehost.getJudgehostUsername())
+                        )
+                )
+                .collect(Collectors.toList());
+
     }
 
     public void log(String name, String ip, String description) {

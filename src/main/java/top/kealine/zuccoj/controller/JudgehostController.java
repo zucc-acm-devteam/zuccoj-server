@@ -66,6 +66,16 @@ public class JudgehostController {
         return BaseResponsePackageUtil.succeedMessage();
     }
 
+    @RequestMapping(value = "/status", method = RequestMethod.GET)
+    public Map<String, Object> judgehostStatus(
+            HttpServletRequest request
+    ) {
+        if (!userService.checkUserPermission(request.getSession(), PermissionLevel.ADMIN)) {
+            return ResponseConstant.X_ACCESS_DENIED;
+        }
+        return BaseResponsePackageUtil.baseData(judgehostService.getJudgehostStatus());
+    }
+
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Map<String, Object> login(
             @RequestParam(name = "username", required = true) String username,
