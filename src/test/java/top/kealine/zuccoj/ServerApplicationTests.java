@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import top.kealine.zuccoj.config.OnlineJudgeConfig;
-import top.kealine.zuccoj.service.JudgehostService;
 import top.kealine.zuccoj.service.ProblemService;
 import top.kealine.zuccoj.service.SolutionService;
 

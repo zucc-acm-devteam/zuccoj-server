@@ -33,7 +33,7 @@ public interface SolutionMapper {
     @Select("SELECT solution_id solutionId, result, memory_used memoryUsed, time_used timeUsed, remark, judgehost FROM solutions WHERE solution_id = #{solutionId}")
     SolutionResult getSolutionResultById(long solutionId);
 
-    @Select("SELECT time_limit timeLimit, memory_limit memoryLimit, solutionId, code, lang, problemId FROM problems " +
+    @Select("SELECT time_limit timeLimit, memory_limit memoryLimit, solutionId, code, lang, problemId, spj FROM problems " +
             "JOIN (SELECT solution_id solutionId, code, lang, solutions.problem_id problemId FROM solutions WHERE solution_id = #{solutionId}) solution " +
             "ON problems.problem_id = solution.problemId")
     JudgeTask generateJudgeTask(long solutionId);

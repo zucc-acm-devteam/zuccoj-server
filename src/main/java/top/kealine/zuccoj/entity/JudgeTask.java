@@ -10,6 +10,7 @@ public class JudgeTask {
     private int timeLimit;
     private int memoryLimit;
     private int lang;
+    private String spj;
 
     public long getSolutionId() {
         return solutionId;
@@ -65,5 +66,17 @@ public class JudgeTask {
 
     public void setProblemId(int problemId) {
         this.problemId = problemId;
+    }
+
+    public String getSpj() {
+        return spj;
+    }
+
+    public void setSpj(String spj) {
+        this.spj = spj;
+    }
+
+    public boolean isSpj() {
+        return spj != null;
     }
 }
