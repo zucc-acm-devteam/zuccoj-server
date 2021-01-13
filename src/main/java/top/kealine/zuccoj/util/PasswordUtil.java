@@ -41,9 +41,4 @@ public class PasswordUtil {
         s2 += token;
         return userInput.equals(encrypt(s1)) || userInput.equals(encrypt(s2));
     }
-
-    public static void main(String[] args) {
-        System.out.println(encrypt("Keadin"));
-        System.out.println(check("YtSiD3E08txbGZCUCmiJnA==", "Keadin"));
-    }
 }

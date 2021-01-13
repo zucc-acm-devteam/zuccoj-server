@@ -8,12 +8,14 @@ public class ResponseConstant {
 
     // User
     public static final Map<String, Object> X_USER_NOT_FOUND = BaseResponsePackageUtil.errorMessage("用户不存在", 404);
+    public static final Map<String, Object> X_USER_FORBIDDEN = BaseResponsePackageUtil.errorMessage("用户已被禁用", 403);
     public static final Map<String, Object> X_USER_LOGIN_FIRST = BaseResponsePackageUtil.errorMessage("请先登录");
     public static final Map<String, Object> X_USER_WRONG_PASSWORD = BaseResponsePackageUtil.errorMessage("用户名或密码错误");
     public static final Map<String, Object> X_USER_ALREADY_EXISTS = BaseResponsePackageUtil.errorMessage("用户已存在");
 
     public static final Map<String, Object> V_USER_LOGIN_SUCCESS = BaseResponsePackageUtil.succeedMessage("登录成功");
     public static final Map<String, Object> V_USER_LOGOUT_SUCCESS = BaseResponsePackageUtil.succeedMessage("退出成功");
+    public static final Map<String, Object> V_USER_REGISTER_SUCCESS = BaseResponsePackageUtil.succeedMessage("注册成功");
 
     public static final Map<String, Object> X_ACCESS_DENIED = BaseResponsePackageUtil.errorMessage("访问受限", 403);
 
@@ -31,6 +33,7 @@ public class ResponseConstant {
 
 
     // Any
+    public static final Map<String, Object> X_CAPTCHA_WRONG = BaseResponsePackageUtil.errorMessage("验证码错误");
     public static final Map<String, Object> X_NOT_FOUND = BaseResponsePackageUtil.errorMessage("资源不存在", 404);
     public static final Map<String, Object> X_BAD_REQUEST = BaseResponsePackageUtil.errorMessage("请求参数错误", 400);
 

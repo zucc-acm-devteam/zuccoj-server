@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import top.kealine.zuccoj.entity.User;
 import top.kealine.zuccoj.constant.PermissionLevel;
 import top.kealine.zuccoj.mapper.UserMapper;
+import top.kealine.zuccoj.util.PasswordUtil;
 
 import javax.servlet.http.HttpSession;
 
@@ -18,12 +19,31 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
-    public User getUserByUsername(String username) {
-        return userMapper.getUserByUsername(username);
+    private String generateUserPassword(String username, String password) {
+        return PasswordUtil.encrypt(username+password);
     }
 
     public boolean checkUser(User user, String password) {
-        return user.getPassword().equals(password);
+        return PasswordUtil.check(user.getPassword(), user.getUsername()+password);
+    }
+
+    public boolean hasUser(String username) {
+        return userMapper.countUserByUsername(username) > 0;
+    }
+
+    public void newUser(String username, String nickname, String password, String email, String school) {
+        User user = new User();
+        user.setUsername(username);
+        user.setNickname(nickname);
+        user.setPassword(generateUserPassword(username, password));
+        user.setEmail(email);
+        user.setSchool(school);
+        user.setStatus(PermissionLevel.COMMON);
+        userMapper.newUser(user);
+    }
+
+    public User getUserByUsername(String username) {
+        return userMapper.getUserByUsername(username);
     }
 
     public void saveUserToSession(HttpSession session, User user) {

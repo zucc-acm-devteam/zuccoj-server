@@ -7,6 +7,8 @@ public class User {
     private String nickname;
     private String password;
     private int status;
+    private String email;
+    private String school;
 
     public String getUsername() {
         return username;
@@ -48,4 +50,19 @@ public class User {
         return status >= PermissionLevel.ADMIN;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getSchool() {
+        return school;
+    }
+
+    public void setSchool(String school) {
+        this.school = school;
+    }
 }
