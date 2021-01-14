@@ -73,6 +73,50 @@ public class ProblemController {
         );
     }
 
+    @RequestMapping(value = "/get", method = RequestMethod.GET)
+    public Map<String, Object> getProblem(
+            @RequestParam(name = "problemId", required = true) int problemId,
+            HttpServletRequest request
+    ) {
+        if (!userService.checkUserPermission(request.getSession(), PermissionLevel.ADMIN)) {
+            return ResponseConstant.X_ACCESS_DENIED;
+        }
+        Problem problem = problemService.getProblem(problemId);
+        if (problem == null) {
+            return ResponseConstant.X_NOT_FOUND;
+        }
+        return BaseResponsePackageUtil.baseData(problem);
+    }
+
+
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public Map<String, Object> update(
+            @RequestParam(name = "problemId", required = true) int problemId,
+            @RequestParam(name = "title", required = true) String title,
+            @RequestParam(name = "description", required = false) String description,
+            @RequestParam(name = "input", required = false) String input,
+            @RequestParam(name = "output", required = false) String output,
+            @RequestParam(name = "hint", required = false) String hint,
+            @RequestParam(name = "timeLimit", required = true) int timeLimit,
+            @RequestParam(name = "memoryLimit", required = true) int memoryLimit,
+            @RequestParam(name = "spj", required = false) String spj,
+            @RequestParam(name = "visible", required = true) boolean visible,
+            @RequestParam(name = "samples", required = false) String samples,
+            @RequestParam(name = "tags", required = false) String tags,
+            HttpServletRequest request
+    ) {
+        if (!userService.checkUserPermission(request.getSession(), PermissionLevel.ADMIN)) {
+            return ResponseConstant.X_ACCESS_DENIED;
+        }
+        Problem problem = ProblemUtil.packageUp(problemId, title, description, input, output, hint, timeLimit, memoryLimit, spj, visible, samples, tags);
+        int cnt = problemService.updateProblem(problem);
+        if (cnt == 0) {
+            return ResponseConstant.X_NOT_FOUND;
+        } else {
+            return BaseResponsePackageUtil.succeedMessage();
+        }
+    }
+
     @RequestMapping(value = "/getProblemSet", method = {RequestMethod.GET, RequestMethod.POST})
     public Map<String, Object> getProblemSet(
             @RequestParam(name = "page", required = true) int page,

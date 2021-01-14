@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import top.kealine.zuccoj.entity.Problem;
 import top.kealine.zuccoj.entity.ProblemDisplay;
 import top.kealine.zuccoj.entity.ProblemInAdmin;
@@ -34,6 +35,15 @@ public interface ProblemMapper {
             "VALUES(#{title}, #{description}, #{input}, #{output}, #{hint}, #{timeLimit}, #{memoryLimit}, #{spj}, #{visible}, #{samples}, #{tags})")
     @Options(useGeneratedKeys = true, keyProperty = "problemId")
     void newProblem(Problem problem);
+
+    @Select("SELECT problem_id problemId, title, description, input, output, hint, time_limit timeLimit, memory_limit memoryLimit, \n" +
+            "spj, visible, samples, tags FROM problems WHERE problem_id=#{problemId}")
+    Problem getProblemById(int problemId);
+
+
+    @Update("UPDATE problems SET title=#{title}, description=#{description}, input=#{input}, output=#{output}, hint=#{hint}, time_limit=#{timeLimit}, " +
+            "memory_limit=#{memoryLimit}, spj=#{spj}, visible=#{visible}, samples=#{samples}, tags=#{tags} WHERE problem_id=#{problemId}")
+    int updateProblem(Problem problem);
 
     @Select("<script> " +
             "SELECT problems.problem_id problemId, title, time_limit timeLimit, memory_limit memoryLimit, tags,visible, \n" +

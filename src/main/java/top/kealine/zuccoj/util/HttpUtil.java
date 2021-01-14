@@ -15,4 +15,12 @@ public class HttpUtil {
         headers.add("ETag", String.valueOf(System.currentTimeMillis()));
         return headers;
     }
+
+    public static HttpHeaders fileHeadersUUID(String filename) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=" + filename);
+        headers.add("Last-Modified", new Date().toString());
+        headers.add("ETag", String.valueOf(System.currentTimeMillis()));
+        return headers;
+    }
 }

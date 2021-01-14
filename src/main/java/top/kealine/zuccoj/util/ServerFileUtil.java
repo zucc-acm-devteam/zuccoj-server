@@ -25,4 +25,16 @@ public class ServerFileUtil {
             file.delete();
         }
     }
+
+    public static String getFileExtend(String fullName) {
+        if (fullName == null) {
+            return "";
+        }
+        int pos = fullName.lastIndexOf('.');
+        if (pos < 0) {
+            return "";
+        } else {
+            return fullName.substring(pos);
+        }
+    }
 }

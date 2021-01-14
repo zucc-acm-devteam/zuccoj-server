@@ -42,6 +42,14 @@ public class ProblemService {
         return problem.getProblemId();
     }
 
+    public Problem getProblem(int problemId) {
+        return problemMapper.getProblemById(problemId);
+    }
+
+    public int updateProblem(Problem problem) {
+        return problemMapper.updateProblem(problem);
+    }
+
     public List<ProblemInfo> getProblemInfoList(int page, int pageSize, boolean showAll) {
         return problemMapper.getProblemInfoList((page-1)*pageSize, pageSize, showAll);
     }

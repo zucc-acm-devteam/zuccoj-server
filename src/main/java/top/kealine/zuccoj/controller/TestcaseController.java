@@ -20,7 +20,6 @@ import top.kealine.zuccoj.util.HttpUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-import java.util.Date;
 import java.util.Map;
 
 @RestController
@@ -101,6 +100,11 @@ public class TestcaseController {
 
         HttpHeaders headers = HttpUtil.fileHeaders(testcaseId + (isInput?".in":".ans"));
 
-        return ResponseEntity .ok() .headers(headers) .contentLength(file.length()) .contentType(MediaType.parseMediaType("application/octet-stream")) .body(new FileSystemResource(file));
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentLength(file.length())
+                .contentType(MediaType.parseMediaType("application/octet-stream"))
+                .body(new FileSystemResource(file));
     }
 }

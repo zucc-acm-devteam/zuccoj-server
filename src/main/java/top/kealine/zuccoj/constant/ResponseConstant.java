@@ -33,6 +33,7 @@ public class ResponseConstant {
 
 
     // Any
+    public static final Map<String, Object> X_SYSTEM_ERROR = BaseResponsePackageUtil.errorMessage("系统错误", 500);
     public static final Map<String, Object> X_CAPTCHA_WRONG = BaseResponsePackageUtil.errorMessage("验证码错误");
     public static final Map<String, Object> X_NOT_FOUND = BaseResponsePackageUtil.errorMessage("资源不存在", 404);
     public static final Map<String, Object> X_BAD_REQUEST = BaseResponsePackageUtil.errorMessage("请求参数错误", 400);
