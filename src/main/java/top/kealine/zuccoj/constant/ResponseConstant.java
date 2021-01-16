@@ -23,20 +23,22 @@ public class ResponseConstant {
     public static final Map<String, Object> X_UPLOAD_FAILED = BaseResponsePackageUtil.errorMessage("上传失败");
     public static final Map<String, Object> V_UPLOAD_SUCCESS = BaseResponsePackageUtil.succeedMessage("上传成功");
 
-    // Delete
-    public static final Map<String, Object> X_DELETE_FAILED = BaseResponsePackageUtil.errorMessage("删除失败");
-    public static final Map<String, Object> V_DELETE_SUCCESS = BaseResponsePackageUtil.succeedMessage("删除成功");
-
-
     // Solution
     public static final Map<String, Object> X_LANGUAGE_NOT_SUPPORTED = BaseResponsePackageUtil.errorMessage("该语言不支持");
 
-
-    // Any
+    // Any error
     public static final Map<String, Object> X_SYSTEM_ERROR = BaseResponsePackageUtil.errorMessage("系统错误", 500);
     public static final Map<String, Object> X_CAPTCHA_WRONG = BaseResponsePackageUtil.errorMessage("验证码错误");
     public static final Map<String, Object> X_NOT_FOUND = BaseResponsePackageUtil.errorMessage("资源不存在", 404);
     public static final Map<String, Object> X_BAD_REQUEST = BaseResponsePackageUtil.errorMessage("请求参数错误", 400);
+    public static final Map<String, Object> X_UPDATE_FAILED = BaseResponsePackageUtil.errorMessage("更新失败");
+    public static final Map<String, Object> X_DELETE_FAILED = BaseResponsePackageUtil.errorMessage("删除失败");
+    public static final Map<String, Object> X_ADD_FAILED = BaseResponsePackageUtil.errorMessage("新增失败");
+
+    // Any success
+    public static final Map<String, Object> V_UPDATE_SUCCESS = BaseResponsePackageUtil.succeedMessage("更新成功");
+    public static final Map<String, Object> V_DELETE_SUCCESS = BaseResponsePackageUtil.succeedMessage("删除成功");
+    public static final Map<String, Object> V_ADD_SUCCESS = BaseResponsePackageUtil.succeedMessage("新增成功");
 
 
     // Judgehost

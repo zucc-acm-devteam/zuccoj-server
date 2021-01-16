@@ -113,7 +113,7 @@ public class ProblemController {
         if (cnt == 0) {
             return ResponseConstant.X_NOT_FOUND;
         } else {
-            return BaseResponsePackageUtil.succeedMessage();
+            return ResponseConstant.V_UPDATE_SUCCESS;
         }
     }
 
