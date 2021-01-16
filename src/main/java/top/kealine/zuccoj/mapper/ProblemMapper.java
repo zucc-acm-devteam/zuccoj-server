@@ -18,7 +18,7 @@ public interface ProblemMapper {
     int getProblemCount();
 
     @Select("SELECT \n" +
-            "problems.problem_id problemId, title, time_limit timeLimit,memory_limit memoryLimit, t1.cnt testcaseCnt\n" +
+            "problems.problem_id problemId, title, time_limit timeLimit,memory_limit memoryLimit, visible, t1.cnt testcaseCnt\n" +
             "FROM problems LEFT JOIN\n" +
             "(SELECT\n" +
             "testcases.problem_id, COUNT(1) cnt\n" +
@@ -42,8 +42,11 @@ public interface ProblemMapper {
 
 
     @Update("UPDATE problems SET title=#{title}, description=#{description}, input=#{input}, output=#{output}, hint=#{hint}, time_limit=#{timeLimit}, " +
-            "memory_limit=#{memoryLimit}, spj=#{spj}, visible=#{visible}, samples=#{samples}, tags=#{tags} WHERE problem_id=#{problemId}")
+            "memory_limit=#{memoryLimit}, spj=#{spj}, samples=#{samples}, tags=#{tags} WHERE problem_id=#{problemId}")
     int updateProblem(Problem problem);
+
+    @Update("UPDATE problems SET visible=#{visible} WHERE problem_id=#{problemId}")
+    int updateProblemVisible(int problemId, boolean visible);
 
     @Select("<script> " +
             "SELECT problems.problem_id problemId, title, time_limit timeLimit, memory_limit memoryLimit, tags,visible, \n" +

@@ -100,7 +100,6 @@ public class ProblemController {
             @RequestParam(name = "timeLimit", required = true) int timeLimit,
             @RequestParam(name = "memoryLimit", required = true) int memoryLimit,
             @RequestParam(name = "spj", required = false) String spj,
-            @RequestParam(name = "visible", required = true) boolean visible,
             @RequestParam(name = "samples", required = false) String samples,
             @RequestParam(name = "tags", required = false) String tags,
             HttpServletRequest request
@@ -108,8 +107,25 @@ public class ProblemController {
         if (!userService.checkUserPermission(request.getSession(), PermissionLevel.ADMIN)) {
             return ResponseConstant.X_ACCESS_DENIED;
         }
-        Problem problem = ProblemUtil.packageUp(problemId, title, description, input, output, hint, timeLimit, memoryLimit, spj, visible, samples, tags);
+        Problem problem = ProblemUtil.packageUp(problemId, title, description, input, output, hint, timeLimit, memoryLimit, spj, false, samples, tags);
         int cnt = problemService.updateProblem(problem);
+        if (cnt == 0) {
+            return ResponseConstant.X_NOT_FOUND;
+        } else {
+            return ResponseConstant.V_UPDATE_SUCCESS;
+        }
+    }
+
+    @RequestMapping(value = "/visible", method = RequestMethod.POST)
+    public Map<String, Object> updateVisible(
+            @RequestParam(name = "problemId", required = true) int problemId,
+            @RequestParam(name = "visible", required = true) boolean visible,
+            HttpServletRequest request
+    ) {
+        if (!userService.checkUserPermission(request.getSession(), PermissionLevel.ADMIN)) {
+            return ResponseConstant.X_ACCESS_DENIED;
+        }
+        int cnt = problemService.updateProblemVisible(problemId, visible);
         if (cnt == 0) {
             return ResponseConstant.X_NOT_FOUND;
         } else {

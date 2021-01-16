@@ -6,6 +6,7 @@ public class ProblemInAdmin {
     private int timeLimit;
     private int memoryLimit;
     private int testcaseCnt;
+    private boolean visible;
 
     public int getProblemId() {
         return problemId;
@@ -45,5 +46,13 @@ public class ProblemInAdmin {
 
     public void setTestcaseCnt(int testcaseCnt) {
         this.testcaseCnt = testcaseCnt;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 }

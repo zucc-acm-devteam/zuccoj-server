@@ -76,7 +76,7 @@ public class SolutionController {
     ) {
         User user = userService.getUserFromSession(request.getSession());
         if (user == null) {
-            return ResponseConstant.X_USER_LOGIN_FIRST;
+            return ResponseConstant.X_ACCESS_DENIED;
         }
         Solution solution = solutionService.getSolutionById(solutionId);
         if (solution == null) {
@@ -104,7 +104,14 @@ public class SolutionController {
     @RequestMapping(value = "/status", method = RequestMethod.GET)
     public Map<String, Object> getStatus(
             @RequestParam(name = "offset", required = false) Integer offset,
-            @RequestParam(name = "size", required = false) Integer size
+            @RequestParam(name = "size", required = false) Integer size,
+            @RequestParam(name = "problemId", required = false) Integer problemId,
+            @RequestParam(name = "username", required = false) String username,
+            @RequestParam(name = "lang", required = false) Integer lang,
+            @RequestParam(name = "result", required = false) Integer result,
+            @RequestParam(name = "judgehost", required = false) String judgehost,
+            @RequestParam(name = "contestId", required = true) Integer contestId,
+            HttpServletRequest request
     ) {
         if (offset == null) {
             offset = 0;
@@ -112,8 +119,8 @@ public class SolutionController {
         if (size == null) {
             size = 20;
         }
-        List<SolutionStatus> statuses = solutionService.getSolutionStatus(offset, size);
-        if (statuses == null || statuses.size() == 0) {
+        List<SolutionStatus> statuses = solutionService.getSolutionStatus(offset, size, problemId, username, lang, result, judgehost, contestId);
+        if (statuses == null) {
             return ResponseConstant.X_NOT_FOUND;
         }
         return BaseResponsePackageUtil.baseData(statuses);

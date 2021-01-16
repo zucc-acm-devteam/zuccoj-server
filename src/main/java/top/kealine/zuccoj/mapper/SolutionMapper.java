@@ -24,11 +24,20 @@ public interface SolutionMapper {
     Solution getSolutionById(long solutionId);
 
 
-    @Select("SELECT solution_id solutionId, problem_id problemId, username, submit_time submitTime, result, " +
-            "memory_used memoryUsed, time_used timeUsed, code_length codeLength, lang " +
-            "FROM solutions\n" +
-            "ORDER BY solution_id DESC LIMIT #{offset}, #{size}")
-    List<SolutionStatus> getSolutionStatus(int offset, int size);
+    @Select("<script> \n" +
+            "SELECT solution_id solutionId, problem_id problemId, username, submit_time submitTime, result, " +
+            "memory_used memoryUsed, time_used timeUsed, code_length codeLength, lang \n" +
+            "FROM solutions \n" +
+            "WHERE 1=1 \n" +
+            "<if test=\"problemId != null\"> AND problem_id=#{problemId} </if> \n" +
+            "<if test=\"username != null\"> AND username=#{username} </if> \n" +
+            "<if test=\"lang != null\"> AND lang=#{lang} </if> \n" +
+            "<if test=\"result != null\"> AND result=#{result} </if> \n" +
+            "<if test=\"judgehost != null\"> AND judgehost=#{judgehost} </if> \n" +
+            "<if test=\"contestId != null\"> AND contest_id=#{contestId} </if> \n" +
+            "ORDER BY solution_id DESC LIMIT #{offset}, #{size}\n" +
+            "</script>")
+    List<SolutionStatus> getSolutionStatus(int offset, int size, Integer problemId, String username, Integer lang, Integer result,  String judgehost, Integer contestId);
 
     @Select("SELECT solution_id solutionId, result, memory_used memoryUsed, time_used timeUsed, remark, judgehost FROM solutions WHERE solution_id = #{solutionId}")
     SolutionResult getSolutionResultById(long solutionId);

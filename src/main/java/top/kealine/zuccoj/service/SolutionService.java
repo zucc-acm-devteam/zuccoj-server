@@ -54,8 +54,8 @@ public class SolutionService {
         return solutionMapper.getSolutionResultById(solutionId);
     }
 
-    public List<SolutionStatus> getSolutionStatus(int offset, int size) {
-        return solutionMapper.getSolutionStatus(offset, size);
+    public List<SolutionStatus> getSolutionStatus(int offset, int size, Integer problemId, String username, Integer lang, Integer result,  String judgehost, Integer contestId) {
+        return solutionMapper.getSolutionStatus(offset, size, problemId, username, lang, result, judgehost, contestId);
     }
 
     public JudgeTask generateJudgeTask(long solutionId) {

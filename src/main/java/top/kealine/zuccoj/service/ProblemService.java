@@ -50,6 +50,10 @@ public class ProblemService {
         return problemMapper.updateProblem(problem);
     }
 
+    public int updateProblemVisible(int problemId, boolean visible) {
+        return problemMapper.updateProblemVisible(problemId, visible);
+    }
+
     public List<ProblemInfo> getProblemInfoList(int page, int pageSize, boolean showAll) {
         return problemMapper.getProblemInfoList((page-1)*pageSize, pageSize, showAll);
     }
