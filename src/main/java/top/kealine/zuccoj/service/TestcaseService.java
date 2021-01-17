@@ -1,14 +1,26 @@
 package top.kealine.zuccoj.service;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import net.lingala.zip4j.ZipFile;
+import net.lingala.zip4j.model.FileHeader;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import top.kealine.zuccoj.config.OnlineJudgeConfig;
 import top.kealine.zuccoj.entity.Testcase;
 import top.kealine.zuccoj.mapper.TestcaseMapper;
 import top.kealine.zuccoj.util.ServerFileUtil;
+import top.kealine.zuccoj.util.ZipUtil;
 
+import java.io.File;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class TestcaseService {
@@ -74,6 +86,27 @@ public class TestcaseService {
             e.printStackTrace();
             testcaseMapper.delTestcase(testcaseId);
             return -1;
+        }
+    }
+
+    public List<String> newTestcaseByZip(int problemId, MultipartFile zip) {
+        String name = UUID.randomUUID().toString() + ".zip";
+        String path = onlineJudgeConfig.tempDir + name;
+        try {
+            ServerFileUtil.save(zip, path);
+            Map<String,String> unzipResult = ZipUtil.unzipTestcasePackage(path);
+            String unzipDir = ServerFileUtil.getFilenameWithoutExtend(path) + onlineJudgeConfig.separator;
+            ImmutableList.Builder<String> result = ImmutableList.builder();
+            for(Map.Entry<String, String> testcase: unzipResult.entrySet()) {
+                String inputFile = unzipDir + testcase.getKey() + ".in";
+                String outputFile = unzipDir + testcase.getKey() + ".ans";
+                int testcaseId = newTestcase(problemId, ServerFileUtil.fileToMultipartFile(inputFile), ServerFileUtil.fileToMultipartFile(outputFile));
+                result.add(String.format("testcaseId = %s, inputFile = %s, outputFile = %s", testcaseId, testcase.getKey()+".in", testcase.getKey()+testcase.getValue()));
+            }
+            return result.build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ImmutableList.of();
         }
     }
 

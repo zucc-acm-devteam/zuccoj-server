@@ -10,26 +10,53 @@ import java.io.File;
 
 @Component
 public class OnlineJudgeInitializer implements ApplicationRunner {
-    @Autowired
-    private OnlineJudgeConfig config;
+    private final OnlineJudgeConfig config;
 
-    private void fileDirCheck() {
+    @Autowired
+    OnlineJudgeInitializer(OnlineJudgeConfig config) {
+        this.config = config;
+    }
+
+    private void clearTempDir(File tempDir) throws Exception {
+        File[] files = tempDir.listFiles();
+        if (files != null) {
+            for (File file: files) {
+                if (file.isDirectory()) {
+                    clearTempDir(file);
+                }
+                if (!file.delete()) {
+                    throw new Exception(String.format("cannot delete temp file %s", file.getAbsolutePath()));
+                }
+            }
+        }
+    }
+
+    private void fileDirCheck() throws Exception {
         File dir = new File(config.uploadRoot);
         if (!dir.exists()) {
-            dir.mkdir();
+            if (!dir.mkdir()) {
+                throw new Exception("cannot create uploadRoot");
+            }
         }
         File dataDir = new File(config.dataDir);
         if (!dataDir.exists()) {
-            dataDir.mkdir();
+            if (!dataDir.mkdir()) {
+                throw new Exception("cannot create dataDir");
+            }
         }
         File fileDir = new File(config.filesDir);
         if (!fileDir.exists()) {
-            fileDir.mkdir();
+            if (!fileDir.mkdir()) {
+                throw new Exception("cannot create fileDir");
+            }
         }
         File tempDir = new File(config.tempDir);
         if (!tempDir.exists()) {
-            tempDir.mkdir();
+            if (!tempDir.mkdir()) {
+                throw new Exception("cannot create tempDir");
+            }
         }
+        clearTempDir(tempDir);
     }
 
     @Override

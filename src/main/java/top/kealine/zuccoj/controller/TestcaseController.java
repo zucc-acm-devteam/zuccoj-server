@@ -20,6 +20,8 @@ import top.kealine.zuccoj.util.HttpUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -44,8 +46,8 @@ public class TestcaseController {
         return BaseResponsePackageUtil.baseData(testcaseService.getTestcaseByProblemId(problemId));
     }
 
-    @RequestMapping(value = "newOne", method = RequestMethod.POST)
-    public Map<String, Object> newTestcase(
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    public Map<String, Object> upload(
             @RequestParam(name = "problemId", required = true) int problemId,
             @RequestParam(name = "inputFile", required = true) MultipartFile inputFile,
             @RequestParam(name = "outputFile", required = true) MultipartFile outputFile,
@@ -62,7 +64,20 @@ public class TestcaseController {
         }
     }
 
-    @RequestMapping(value = "delOne", method = {RequestMethod.POST, RequestMethod.GET, RequestMethod.DELETE})
+    @RequestMapping(value = "/uploadZip", method = RequestMethod.POST)
+    public Map<String, Object> uploadZip(
+            @RequestParam(name = "problemId", required = true) int problemId,
+            @RequestParam(name = "zip", required = true) MultipartFile zip,
+            HttpServletRequest request
+    ) {
+        if (!userService.checkUserPermission(request.getSession(), PermissionLevel.ADMIN)) {
+            return ResponseConstant.X_ACCESS_DENIED;
+        }
+        List<String> result = testcaseService.newTestcaseByZip(problemId, zip);
+        return BaseResponsePackageUtil.baseData(result);
+    }
+
+    @RequestMapping(value = "/delOne", method = {RequestMethod.POST, RequestMethod.GET, RequestMethod.DELETE})
     public Map<String, Object> delOne(
             @RequestParam(name = "testcaseId", required = true) int testcaseId,
             HttpServletRequest request
@@ -80,7 +95,7 @@ public class TestcaseController {
         }
     }
 
-    @RequestMapping(value = "download", method = RequestMethod.GET)
+    @RequestMapping(value = "/download", method = RequestMethod.GET)
     public ResponseEntity<FileSystemResource> downloadOne(
             @RequestParam(name = "id", required = true) int testcaseId,
             @RequestParam(name = "input", required = true) boolean isInput,
