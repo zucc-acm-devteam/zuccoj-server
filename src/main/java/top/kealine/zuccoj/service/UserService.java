@@ -79,6 +79,9 @@ public class UserService {
     }
 
     public boolean checkUserPermission(User user, int permissionLevel) {
+        if (permissionLevel == PermissionLevel.ANYONE) {
+            return true;
+        }
         if (user == null) {
             return false;
         }

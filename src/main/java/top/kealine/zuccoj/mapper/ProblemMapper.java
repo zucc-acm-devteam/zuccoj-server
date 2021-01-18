@@ -52,13 +52,19 @@ public interface ProblemMapper {
             "SELECT problems.problem_id problemId, title, time_limit timeLimit, memory_limit memoryLimit, tags,visible, \n" +
             "(SELECT COUNT(*) FROM solutions WHERE solutions.problem_id = problems.problem_id) submitted, \n" +
             "(SELECT COUNT(*) FROM solutions WHERE solutions.problem_id = problems.problem_id AND solutions.result = 7) solved\n" +
+            "<if test=\"username != null\"> \n" +
+            ",(\n" +
+            "IF ((SELECT COUNT(*) FROM solutions WHERE solutions.problem_id = problems.problem_id AND solutions.username = #{username})=0,0,\n" +
+            "(IF ((SELECT COUNT(*) FROM solutions WHERE solutions.problem_id = problems.problem_id AND solutions.result = 7 AND solutions.username = #{username})>0,1,-1)))\n" +
+            ") `status`\n" +
+            "</if> \n" +
             "FROM problems \n" +
             "WHERE 1=1\n" +
             "<if test=\"showAll != true\"> AND problems.visible = true </if> \n" +
             "ORDER BY problemId ASC\n" +
             "LIMIT #{offset}, #{size} \n" +
             "</script>")
-    List<ProblemInfo> getProblemInfoList(int offset, int size, boolean showAll);
+    List<ProblemInfo> getProblemInfoList(int offset, int size, boolean showAll, String username);
 
     @Select("<script> " +
             "SELECT COUNT(*)" +

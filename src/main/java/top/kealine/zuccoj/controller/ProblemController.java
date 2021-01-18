@@ -11,6 +11,7 @@ import top.kealine.zuccoj.constant.ResponseConstant;
 import top.kealine.zuccoj.entity.Problem;
 import top.kealine.zuccoj.entity.ProblemDisplay;
 import top.kealine.zuccoj.entity.ProblemInfo;
+import top.kealine.zuccoj.entity.User;
 import top.kealine.zuccoj.service.ProblemService;
 import top.kealine.zuccoj.service.UserService;
 import top.kealine.zuccoj.util.BaseResponsePackageUtil;
@@ -139,10 +140,12 @@ public class ProblemController {
             @RequestParam(name = "pageSize", required = true) int pageSize,
             HttpServletRequest request
     ) {
-        boolean showAll = userService.checkUserPermission(request.getSession(), PermissionLevel.ADMIN);
+        User user = userService.getUserFromSession(request.getSession());
+        boolean showAll = userService.checkUserPermission(user, PermissionLevel.ADMIN);
+        String username = user == null ? null : user.getUsername();
         return BaseResponsePackageUtil.baseData(
                 ImmutableMap.of(
-                        "problems", problemService.getProblemInfoList(page, pageSize, showAll),
+                        "problems", problemService.getProblemInfoList(page, pageSize, showAll, username),
                         "count", problemService.getProblemInfoListCount(showAll),
                         "page", page
                 ));

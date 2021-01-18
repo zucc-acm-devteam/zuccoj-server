@@ -54,8 +54,8 @@ public class ProblemService {
         return problemMapper.updateProblemVisible(problemId, visible);
     }
 
-    public List<ProblemInfo> getProblemInfoList(int page, int pageSize, boolean showAll) {
-        return problemMapper.getProblemInfoList((page-1)*pageSize, pageSize, showAll);
+    public List<ProblemInfo> getProblemInfoList(int page, int pageSize, boolean showAll, String username) {
+        return problemMapper.getProblemInfoList((page-1)*pageSize, pageSize, showAll, username);
     }
 
     public int getProblemInfoListCount(boolean showAll) {
