@@ -85,4 +85,7 @@ public interface ProblemMapper {
     @Select("SELECT problem_id problemId, title, time_limit timeLimit, memory_limit memoryLimit, description, input, output, hint, samples, visible \n" +
             "FROM problems WHERE problem_id = #{problemId}")
     ProblemDisplay getProblemDisplay(int problemId);
+
+    @Select("SELECT title FROM problems WHERE problem_id = #{problemId}")
+    String getProblemTitle(int problemId);
 }

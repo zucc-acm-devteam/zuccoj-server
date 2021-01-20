@@ -184,4 +184,16 @@ public class ProblemController {
         }
         return BaseResponsePackageUtil.baseData(display);
     }
+
+    @RequestMapping(value = "/title", method = RequestMethod.GET)
+    public Map<String, Object> getProblemTitle(
+            @RequestParam(name = "problemId", required = true) int problemId,
+            HttpServletRequest request
+    ) {
+        String title = problemService.getProblemTitle(problemId);
+        if (title == null) {
+            return ResponseConstant.X_NOT_FOUND;
+        }
+        return BaseResponsePackageUtil.baseData(title);
+    }
 }

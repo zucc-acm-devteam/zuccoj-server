@@ -69,4 +69,8 @@ public class ProblemService {
     public ProblemDisplay getProblemDisplay(int problemId) {
         return problemMapper.getProblemDisplay(problemId);
     }
+
+    public String getProblemTitle(int problemId) {
+        return problemMapper.getProblemTitle(problemId);
+    }
 }
