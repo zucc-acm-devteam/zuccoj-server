@@ -11,6 +11,29 @@ public class Contest {
     private String password;
     private int contestType;
 
+    public Contest(int contestId, String contestName, String beginTime, String endTime, String freezeTime, String unfreezeTime, boolean isPublic, String password, int contestType) {
+        this.contestId = contestId;
+        this.contestName = contestName;
+        this.beginTime = beginTime;
+        this.endTime = endTime;
+        this.freezeTime = freezeTime;
+        this.unfreezeTime = unfreezeTime;
+        this.isPublic = isPublic;
+        this.password = password;
+        this.contestType = contestType;
+    }
+
+    public Contest(String contestName, String beginTime, String endTime, String freezeTime, String unfreezeTime, boolean isPublic, String password, int contestType) {
+        this.contestName = contestName;
+        this.beginTime = beginTime;
+        this.endTime = endTime;
+        this.freezeTime = freezeTime;
+        this.unfreezeTime = unfreezeTime;
+        this.isPublic = isPublic;
+        this.password = password;
+        this.contestType = contestType;
+    }
+
     public int getContestId() {
         return contestId;
     }
