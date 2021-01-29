@@ -99,4 +99,7 @@ public interface ContestMapper {
 
     @Select("SELECT t.username username, nickname FROM (SELECT username FROM contest_member WHERE contest_id=#{contestId}) t JOIN users ON t.username = users.username")
     List<UserNickname> getPrivateContestMember(int contestId);
+
+    @Insert("INSERT INTO contest_member(contest_id, username) VALUES(#{contestId}, #{username})")
+    void newContestMember(int contestId, String username);
 }

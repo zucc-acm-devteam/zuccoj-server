@@ -26,6 +26,12 @@ public class ResponseConstant {
     // Solution
     public static final Map<String, Object> X_LANGUAGE_NOT_SUPPORTED = BaseResponsePackageUtil.errorMessage("该语言不支持");
 
+    // Contest
+    public static final Map<String, Object> X_CONTEST_WRONG_PASSWORD = BaseResponsePackageUtil.errorMessage("比赛密码不正确");
+    public static final Map<String, Object> X_CONTEST_IS_NOT_PRIVATE = BaseResponsePackageUtil.errorMessage("该比赛不是私有比赛");
+    public static final Map<String, Object> V_CONTEST_REGISTER_SUCCESS = BaseResponsePackageUtil.succeedMessage("注册成功");
+
+
     // Any error
     public static final Map<String, Object> X_SYSTEM_ERROR = BaseResponsePackageUtil.errorMessage("系统错误", 500);
     public static final Map<String, Object> X_CAPTCHA_WRONG = BaseResponsePackageUtil.errorMessage("验证码错误");
@@ -39,7 +45,6 @@ public class ResponseConstant {
     public static final Map<String, Object> V_UPDATE_SUCCESS = BaseResponsePackageUtil.succeedMessage("更新成功");
     public static final Map<String, Object> V_DELETE_SUCCESS = BaseResponsePackageUtil.succeedMessage("删除成功");
     public static final Map<String, Object> V_ADD_SUCCESS = BaseResponsePackageUtil.succeedMessage("新增成功");
-
 
     // Judgehost
     public static final Map<String, Object> X_JUDGEHOST_DUE = BaseResponsePackageUtil.errorMessage("验证过期", 700);

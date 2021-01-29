@@ -76,4 +76,8 @@ public class ContestService {
             return contestMapper.getPrivateContestMember(contestId);
         }
     }
+
+    public void newContestMember(int contestId, String username) {
+        contestMapper.newContestMember(contestId, username);
+    }
 }

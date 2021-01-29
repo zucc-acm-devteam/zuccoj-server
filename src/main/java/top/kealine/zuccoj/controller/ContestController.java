@@ -151,6 +151,22 @@ public class ContestController {
         ));
     }
 
+    @RequestMapping(value = "/info", method = RequestMethod.GET)
+    public Map<String, Object> getContestInfo(
+            @RequestParam(name = "contestId", required = true) Integer contestId,
+            HttpServletRequest request
+    ) {
+        User user = userService.getUserFromSession(request.getSession());
+        ContestInfo contestInfo = contestService.getContestInfo((user==null?null:user.getUsername()), contestId);
+        if (contestInfo == null) {
+            return ResponseConstant.X_NOT_FOUND;
+        }
+        if (user == null && contestInfo.getStatus() == 0) {
+            contestInfo.setStatus(-1);
+        }
+        return BaseResponsePackageUtil.baseData(contestInfo);
+    }
+
     @RequestMapping(value = "/member", method = RequestMethod.GET)
     public Map<String, Object> getContestMember(
             @RequestParam(name = "contestId", required = true) int contestId,
@@ -161,6 +177,31 @@ public class ContestController {
             return ResponseConstant.X_NOT_FOUND;
         }
         return BaseResponsePackageUtil.baseData(contestService.getContestMember(contestId, contest.isPublic()));
+    }
+
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public Map<String, Object> registerPrivateContest(
+            @RequestParam(name = "contestId", required = true) int contestId,
+            @RequestParam(name = "password", required = true) String password,
+            HttpServletRequest request
+    ) {
+        Contest contest = contestService.getContest(contestId);
+        if (contest == null) {
+            return ResponseConstant.X_NOT_FOUND;
+        }
+        if (contest.isPublic()) {
+            return ResponseConstant.X_CONTEST_IS_NOT_PRIVATE;
+        }
+        User user = userService.getUserFromSession(request.getSession());
+        if (user == null) {
+            return ResponseConstant.X_USER_LOGIN_FIRST;
+        }
+        if (!contest.getPassword().equals(password)) {
+            return ResponseConstant.X_CONTEST_WRONG_PASSWORD;
+        } else {
+            contestService.newContestMember(contestId, user.getUsername());
+            return ResponseConstant.V_CONTEST_REGISTER_SUCCESS;
+        }
     }
 
 
