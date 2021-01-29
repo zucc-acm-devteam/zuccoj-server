@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.kealine.zuccoj.entity.Contest;
+import top.kealine.zuccoj.entity.ContestInfo;
 import top.kealine.zuccoj.entity.ContestProblem;
+import top.kealine.zuccoj.entity.UserNickname;
 import top.kealine.zuccoj.mapper.ContestMapper;
 
 import java.util.List;
@@ -25,6 +27,10 @@ public class ContestService {
 
     public List<ContestProblem> getContestProblem(int contestId) {
         return contestMapper.getContestProblem(contestId);
+    }
+
+    public int getContestCount() {
+        return contestMapper.getContestCount();
     }
 
     @Transactional
@@ -50,8 +56,24 @@ public class ContestService {
         for (int i=0;i<oldContestProblemCount;i++) {
             contestMapper.updateContestProblem(contestProblems.get(i));
         }
-        for (int i=oldContestProblemCount+1;i<newContestProblemCount;i++) {
+        for (int i=oldContestProblemCount;i<newContestProblemCount;i++) {
             contestMapper.insertContestProblem(contestProblems.get(i));
+        }
+    }
+
+    public ContestInfo getContestInfo(String username, int contestId) {
+        return contestMapper.getContestInfo(username==null?"":username, contestId);
+    }
+
+    public List<ContestInfo> getContestInfoList(String username, int page, int pageSize) {
+        return contestMapper.getContestInfoList(username==null?"":username, (page-1)*pageSize, pageSize);
+    }
+
+    public List<UserNickname> getContestMember(int contestId, boolean isPublic) {
+        if (isPublic) {
+            return contestMapper.getPublicContestMember(contestId);
+        } else {
+            return contestMapper.getPrivateContestMember(contestId);
         }
     }
 }
