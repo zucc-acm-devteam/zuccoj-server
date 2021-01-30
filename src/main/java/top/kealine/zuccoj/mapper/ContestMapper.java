@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Update;
 import top.kealine.zuccoj.entity.Contest;
 import top.kealine.zuccoj.entity.ContestInfo;
 import top.kealine.zuccoj.entity.ContestProblem;
+import top.kealine.zuccoj.entity.ContestProblemInfo;
 import top.kealine.zuccoj.entity.UserNickname;
 
 import java.util.List;
@@ -102,4 +103,32 @@ public interface ContestMapper {
 
     @Insert("INSERT INTO contest_member(contest_id, username) VALUES(#{contestId}, #{username})")
     void newContestMember(int contestId, String username);
+
+    @Select("SELECT IF(NOW()<begin_time,-1,(IF(NOW()>end_time,1,0))) FROM contest WHERE contest_id = #{contestId}")
+    Integer getContestStatus(int contestId);
+
+    @Select("SELECT COUNT(*) FROM contest_member WHERE contest_id = #{contestId} AND username = #{username}")
+    int checkMemberOfContest(int contestId, String username);
+
+    @Select("<script>\n" +
+            "SELECT\n" +
+            "contest_id contestId,\n" +
+            "problem_order problemId,\n" +
+            "problems.problem_id realProblemId,\n" +
+            "title,\n" +
+            "time_limit timeLimit,\n" +
+            "memory_limit memoryLimit,\n" +
+            "(SELECT COUNT(*) FROM solutions WHERE solutions.problem_id = problems.problem_id AND solutions.contest_id = #{contestId}) submitted,\n" +
+            "(SELECT COUNT(*) FROM solutions WHERE solutions.problem_id = problems.problem_id AND solutions.result = 7 AND solutions.contest_id = #{contestId}) solved\n" +
+            "<if test=\"username != null\"> \n" +
+            ",(IF ((SELECT COUNT(*) FROM solutions WHERE solutions.problem_id = problems.problem_id AND solutions.contest_id = #{contestId} AND solutions.username = #{username})=0,0,\n" +
+            "  (IF ((SELECT COUNT(*) FROM solutions WHERE solutions.problem_id = problems.problem_id AND solutions.contest_id = #{contestId} AND solutions.result = 7 AND solutions.username = #{username})>0,1,-1)))) `status`\n" +
+            "</if> \n" +
+            "FROM\n" +
+            "( SELECT * FROM contest_problem WHERE contest_id = #{contestId} ) p\n" +
+            "JOIN problems ON p.problem_id = problems.problem_id \n" +
+            "ORDER BY\n" +
+            "problem_order ASC\n" +
+            "</script>")
+    List<ContestProblemInfo> getContestProblemInfoList(int contestId, String username);
 }

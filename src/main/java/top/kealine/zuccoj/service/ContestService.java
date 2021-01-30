@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import top.kealine.zuccoj.entity.Contest;
 import top.kealine.zuccoj.entity.ContestInfo;
 import top.kealine.zuccoj.entity.ContestProblem;
+import top.kealine.zuccoj.entity.ContestProblemInfo;
 import top.kealine.zuccoj.entity.UserNickname;
 import top.kealine.zuccoj.mapper.ContestMapper;
 
@@ -79,5 +80,17 @@ public class ContestService {
 
     public void newContestMember(int contestId, String username) {
         contestMapper.newContestMember(contestId, username);
+    }
+
+    public boolean isMemberOfContest(int contestId, String username) {
+        return contestMapper.checkMemberOfContest(contestId, username) > 0;
+    }
+
+    public Integer getContestStatus(int contestId) {
+        return contestMapper.getContestStatus(contestId);
+    }
+
+    public List<ContestProblemInfo> getContestProblemInfoList(int contestId, String username) {
+        return contestMapper.getContestProblemInfoList(contestId, username);
     }
 }

@@ -11,6 +11,7 @@ import top.kealine.zuccoj.constant.ResponseConstant;
 import top.kealine.zuccoj.entity.Contest;
 import top.kealine.zuccoj.entity.ContestInfo;
 import top.kealine.zuccoj.entity.ContestProblem;
+import top.kealine.zuccoj.entity.ContestProblemInfo;
 import top.kealine.zuccoj.entity.User;
 import top.kealine.zuccoj.service.ContestService;
 import top.kealine.zuccoj.service.ProblemService;
@@ -204,6 +205,24 @@ public class ContestController {
         }
     }
 
-
-
+    @RequestMapping(value = "/problems", method = RequestMethod.GET)
+    public Map<String, Object> getContestProblemInfoList(
+            @RequestParam(name = "contestId", required = true) int contestId,
+            HttpServletRequest request
+    ) {
+        Contest contest = contestService.getContest(contestId);
+        if (contest == null) {
+            return ResponseConstant.X_NOT_FOUND;
+        }
+        User user = userService.getUserFromSession(request.getSession());
+        if (!contest.isPublic() && ((user == null) || (!user.isAdmin() && !contestService.isMemberOfContest(contestId, user.getUsername())))) {
+            return ResponseConstant.X_ACCESS_DENIED;
+        }
+        List<ContestProblemInfo> contestProblemInfoList = contestService.getContestProblemInfoList(contestId, user == null ? null : user.getUsername());
+        int contestStatus = contestService.getContestStatus(contestId);
+        if (contestStatus < 1) {
+            contestProblemInfoList.forEach(ContestProblemInfo::hideProblemId);
+        }
+        return BaseResponsePackageUtil.baseData(contestProblemInfoList);
+    }
 }
