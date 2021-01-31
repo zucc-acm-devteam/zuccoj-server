@@ -1,5 +1,6 @@
 package top.kealine.zuccoj.controller;
 
+import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -8,11 +9,13 @@ import org.springframework.web.bind.annotation.RestController;
 import top.kealine.zuccoj.constant.PermissionLevel;
 import top.kealine.zuccoj.constant.ResponseConstant;
 import top.kealine.zuccoj.entity.User;
+import top.kealine.zuccoj.entity.UserRank;
 import top.kealine.zuccoj.service.CaptchaService;
 import top.kealine.zuccoj.service.UserService;
 import top.kealine.zuccoj.util.BaseResponsePackageUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -93,6 +96,24 @@ public class UserController {
         }
         userService.newUser(username, nickname, password, email, school);
         return ResponseConstant.V_USER_REGISTER_SUCCESS;
+    }
+
+    @RequestMapping(value = "/rank", method = RequestMethod.GET)
+    public Map<String, Object> getRank(
+            @RequestParam(name = "page", required = true) int page,
+            @RequestParam(name = "pageSize", required = true) int pageSize
+    ) {
+        int begin = (page-1)*pageSize;
+        List<UserRank> userRanks = userService.getUserRank(page, pageSize);
+        for (UserRank rank:userRanks) {
+            rank.setRank(++begin);
+        }
+        return BaseResponsePackageUtil.baseData(ImmutableMap.of(
+                "users", userRanks,
+                "count", userService.getUserCount(),
+                "page", page,
+                "pageSize", pageSize
+        ));
     }
 
 }

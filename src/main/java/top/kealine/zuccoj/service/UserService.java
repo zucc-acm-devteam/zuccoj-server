@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.kealine.zuccoj.entity.User;
 import top.kealine.zuccoj.constant.PermissionLevel;
+import top.kealine.zuccoj.entity.UserRank;
 import top.kealine.zuccoj.mapper.UserMapper;
 import top.kealine.zuccoj.util.PasswordUtil;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -44,6 +46,14 @@ public class UserService {
 
     public User getUserByUsername(String username) {
         return userMapper.getUserByUsername(username);
+    }
+
+    public int getUserCount() {
+        return userMapper.getUserCount();
+    }
+
+    public List<UserRank> getUserRank(int page, int pageSize) {
+        return userMapper.getUserRank((page-1)*pageSize, pageSize);
     }
 
     public void saveUserToSession(HttpSession session, User user) {
