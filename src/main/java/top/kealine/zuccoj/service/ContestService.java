@@ -30,6 +30,10 @@ public class ContestService {
         return contestMapper.getContestProblem(contestId);
     }
 
+    public ContestProblem getContestProblem(int contestId, int problemOrder) {
+        return contestMapper.getContestProblemByOrder(contestId, problemOrder);
+    }
+
     public int getContestCount() {
         return contestMapper.getContestCount();
     }

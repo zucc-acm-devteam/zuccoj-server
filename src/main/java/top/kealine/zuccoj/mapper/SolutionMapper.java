@@ -14,13 +14,14 @@ import java.util.List;
 
 @Mapper
 public interface SolutionMapper {
-    @Insert("INSERT INTO solutions(problem_id, username, code, result, code_length, lang) VALUES(#{problemId}, #{username}, #{code}, #{result}, #{codeLength}, #{lang})")
+    @Insert("INSERT INTO solutions(problem_id, username, code, result, code_length, lang, contest_id) VALUES(#{problemId}, #{username}, #{code}, #{result}, #{codeLength}, #{lang}, #{contestId})")
     @Options(useGeneratedKeys = true, keyProperty = "solutionId")
     void newSolution(Solution solution);
 
-    @Select("SELECT solution_id solutionId, problem_id problemId, username, code, submit_time submitTime, result, " +
-            "memory_used memoryUsed, time_used timeUsed, code_length codeLength, lang, remark, judgehost " +
-            "FROM solutions WHERE solution_id = #{solutionId}")
+    @Select("SELECT solution_id solutionId, problems.problem_id problemId, username, code, submit_time submitTime, result, " +
+            "memory_used memoryUsed, time_used timeUsed, code_length codeLength, lang, remark, judgehost, contest_id contestId, " +
+            "problems.title problemTitle \n" +
+            "FROM solutions JOIN problems ON solutions.problem_id = problems.problem_id WHERE solution_id = #{solutionId}")
     Solution getSolutionById(long solutionId);
 
 

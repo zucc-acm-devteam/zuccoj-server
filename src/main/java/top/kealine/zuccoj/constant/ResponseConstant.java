@@ -25,10 +25,12 @@ public class ResponseConstant {
 
     // Solution
     public static final Map<String, Object> X_LANGUAGE_NOT_SUPPORTED = BaseResponsePackageUtil.errorMessage("该语言不支持");
+    public static final Map<String, Object> X_CODE_IS_TOO_SHORT = BaseResponsePackageUtil.errorMessage("代码过短");
 
     // Contest
     public static final Map<String, Object> X_CONTEST_WRONG_PASSWORD = BaseResponsePackageUtil.errorMessage("比赛密码不正确");
     public static final Map<String, Object> X_CONTEST_IS_NOT_PRIVATE = BaseResponsePackageUtil.errorMessage("该比赛不是私有比赛");
+    public static final Map<String, Object> X_CONTEST_HAS_NOT_STARTED = BaseResponsePackageUtil.errorMessage("比赛还未开始", -1);
     public static final Map<String, Object> V_CONTEST_REGISTER_SUCCESS = BaseResponsePackageUtil.succeedMessage("注册成功");
 
 

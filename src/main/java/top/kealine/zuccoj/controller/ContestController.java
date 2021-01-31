@@ -1,5 +1,6 @@
 package top.kealine.zuccoj.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,13 +9,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.kealine.zuccoj.constant.PermissionLevel;
 import top.kealine.zuccoj.constant.ResponseConstant;
+import top.kealine.zuccoj.constant.SupportedLanguage;
 import top.kealine.zuccoj.entity.Contest;
 import top.kealine.zuccoj.entity.ContestInfo;
 import top.kealine.zuccoj.entity.ContestProblem;
 import top.kealine.zuccoj.entity.ContestProblemInfo;
+import top.kealine.zuccoj.entity.ProblemDisplay;
 import top.kealine.zuccoj.entity.User;
 import top.kealine.zuccoj.service.ContestService;
 import top.kealine.zuccoj.service.ProblemService;
+import top.kealine.zuccoj.service.SolutionService;
 import top.kealine.zuccoj.service.UserService;
 import top.kealine.zuccoj.util.BaseResponsePackageUtil;
 
@@ -29,13 +33,15 @@ import static java.util.stream.Collectors.toList;
 public class ContestController {
     private final ContestService contestService;
     private final ProblemService problemService;
+    private final SolutionService solutionService;
     private final UserService userService;
 
     @Autowired
-    ContestController(ContestService contestService, ProblemService problemService, UserService userService) {
+    ContestController(ContestService contestService, ProblemService problemService, SolutionService solutionService, UserService userService) {
         this.contestService = contestService;
         this.userService = userService;
         this.problemService = problemService;
+        this.solutionService = solutionService;
     }
 
     @RequestMapping(value = "/new", method = RequestMethod.POST)
@@ -224,5 +230,76 @@ public class ContestController {
             contestProblemInfoList.forEach(ContestProblemInfo::hideProblemId);
         }
         return BaseResponsePackageUtil.baseData(contestProblemInfoList);
+    }
+
+    @RequestMapping(value = "/problem/display", method = RequestMethod.GET)
+    public Map<String, Object> getContestProblemDisplay(
+            @RequestParam(name = "contestId", required = true) int contestId,
+            @RequestParam(name = "problemId", required = true) int problemOrder, // problemId in contest -> problemOrder
+            HttpServletRequest request
+    ) {
+        Contest contest = contestService.getContest(contestId);
+        if (contest == null) {
+            return ResponseConstant.X_NOT_FOUND;
+        }
+        int contestStatus = contestService.getContestStatus(contestId);
+        User user = userService.getUserFromSession(request.getSession());
+        ContestProblem contestProblem = contestService.getContestProblem(contestId, problemOrder);
+        if (contestProblem == null) {
+            return ResponseConstant.X_NOT_FOUND;
+        }
+        if (!contest.isPublic() && ((user == null) || (!user.isAdmin() && !contestService.isMemberOfContest(contestId, user.getUsername())))) {
+            return ResponseConstant.X_ACCESS_DENIED;
+        }
+        if (contestStatus < 0 && (user == null || !user.isAdmin())) {
+            return ResponseConstant.X_CONTEST_HAS_NOT_STARTED;
+        }
+        ProblemDisplay problemDisplay = problemService.getProblemDisplay(contestProblem.getProblemId());
+        problemDisplay.setProblemId(problemOrder);
+        return BaseResponsePackageUtil.baseData(problemDisplay);
+    }
+
+    @RequestMapping(value = "/solution/submit", method = RequestMethod.POST)
+    public Map<String, Object> submitContestProblemSolution(
+            @RequestParam(name = "contestId", required = true) int contestId,
+            @RequestParam(name = "problemId", required = true) int problemOrder, // problemId in contest -> problemOrder
+            @RequestParam(name = "lang", required = true) int lang,
+            @RequestParam(name = "code", required = true) String code,
+            HttpServletRequest request
+    ) throws JsonProcessingException {
+        if (code.length() < 6) {
+            return ResponseConstant.X_CODE_IS_TOO_SHORT;
+        }
+
+        if (!SupportedLanguage.isLanguageSupported(lang)) {
+            return ResponseConstant.X_LANGUAGE_NOT_SUPPORTED;
+        }
+
+        User user = userService.getUserFromSession(request.getSession());
+        if (user == null) {
+            return ResponseConstant.X_USER_LOGIN_FIRST;
+        }
+
+        Contest contest = contestService.getContest(contestId);
+        if (contest == null) {
+            return ResponseConstant.X_NOT_FOUND;
+        }
+
+        if (!contest.isPublic() && (!user.isAdmin() && !contestService.isMemberOfContest(contestId, user.getUsername()))) {
+            return ResponseConstant.X_ACCESS_DENIED;
+        }
+
+        ContestProblem contestProblem = contestService.getContestProblem(contestId, problemOrder);
+        if (contestProblem == null) {
+            return ResponseConstant.X_NOT_FOUND;
+        }
+
+        int contestStatus = contestService.getContestStatus(contestId);
+        if (contestStatus < 0 && !user.isAdmin()) {
+            return ResponseConstant.X_CONTEST_HAS_NOT_STARTED;
+        }
+
+        long solutionId = solutionService.newSolution(contestProblem.getProblemId(), user.getUsername(), code, lang, contestId);
+        return BaseResponsePackageUtil.baseData(ImmutableMap.of("solutionId", solutionId));
     }
 }

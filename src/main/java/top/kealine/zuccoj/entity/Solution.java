@@ -3,6 +3,7 @@ package top.kealine.zuccoj.entity;
 public class Solution {
     private long solutionId;
     private int problemId;
+    private String problemTitle;
     private String username;
     private String code;
     private String submitTime;
@@ -13,6 +14,7 @@ public class Solution {
     private int lang;
     private String remark;
     private String judgehost;
+    private int contestId;
 
     public long getSolutionId() {
         return solutionId;
@@ -108,5 +110,21 @@ public class Solution {
 
     public void setJudgehost(String judgehost) {
         this.judgehost = judgehost;
+    }
+
+    public int getContestId() {
+        return contestId;
+    }
+
+    public void setContestId(int contestId) {
+        this.contestId = contestId;
+    }
+
+    public String getProblemTitle() {
+        return problemTitle;
+    }
+
+    public void setProblemTitle(String problemTitle) {
+        this.problemTitle = problemTitle;
     }
 }

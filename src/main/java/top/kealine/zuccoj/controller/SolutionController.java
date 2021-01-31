@@ -54,6 +54,10 @@ public class SolutionController {
             return ResponseConstant.X_LANGUAGE_NOT_SUPPORTED;
         }
 
+        if (code.length() < 6) {
+            return ResponseConstant.X_CODE_IS_TOO_SHORT;
+        }
+
         ProblemInfo problemInfo = problemService.getProblemInfo(problemId);
         if (problemInfo == null) {
             return ResponseConstant.X_NOT_FOUND;
@@ -64,8 +68,7 @@ public class SolutionController {
             }
         }
 
-        long solutionId = solutionService.newSolution(problemId, user.getUsername(), code, lang);
-        solutionService.publishTask(solutionId);
+        long solutionId = solutionService.newSolution(problemId, user.getUsername(), code, lang, 0);
         return BaseResponsePackageUtil.baseData(ImmutableMap.of("solutionId", solutionId));
     }
 
@@ -83,6 +86,9 @@ public class SolutionController {
             return ResponseConstant.X_NOT_FOUND;
         }
         if (user.isAdmin() || user.getUsername().equals(solution.getUsername())) {
+            if (solution.getContestId() != 0) {
+                solution.setProblemId(0);
+            }
             return BaseResponsePackageUtil.baseData(solution);
         } else {
             return ResponseConstant.X_ACCESS_DENIED;

@@ -49,6 +49,9 @@ public interface ContestMapper {
             "ORDER BY problem_order ASC")
     List<ContestProblem> getContestProblem(int contestId);
 
+    @Select("SELECT contest_id contestId, problem_order problemOrder, problem_id problemId FROM contest_problem WHERE contest_id=#{contestId} AND problem_order=#{problemOrder}")
+    ContestProblem getContestProblemByOrder(int contestId, int problemOrder);
+
     @Select("SELECT\n" +
             "  contest_id contestId,\n" +
             "  contest_name contestName,\n" +

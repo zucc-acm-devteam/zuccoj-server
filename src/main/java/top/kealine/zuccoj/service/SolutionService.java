@@ -34,7 +34,7 @@ public class SolutionService {
         this.testcaseMapper = testcaseMapper;
     }
 
-    public long newSolution(int problemId, String username, String code, int lang) {
+    public long newSolution(int problemId, String username, String code, int lang, int contestId) throws JsonProcessingException {
         Solution solution = new Solution();
         solution.setProblemId(problemId);
         solution.setUsername(username);
@@ -42,7 +42,9 @@ public class SolutionService {
         solution.setLang(lang);
         solution.setResult(JudgeResult.PENDING);
         solution.setCodeLength(code.length());
+        solution.setContestId(contestId);
         solutionMapper.newSolution(solution);
+        publishTask(solution.getSolutionId());
         return solution.getSolutionId();
     }
 
