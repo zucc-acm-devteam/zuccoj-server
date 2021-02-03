@@ -131,4 +131,20 @@ public class SolutionController {
         }
         return BaseResponsePackageUtil.baseData(statuses);
     }
+
+    @RequestMapping(value = "/weekStat", method = RequestMethod.GET)
+    public Map<String, Object> getStatIn7Days(
+            @RequestParam(name = "username", required = false) String username,
+            HttpServletRequest request
+    ) {
+        return BaseResponsePackageUtil.baseData(solutionService.get7DaysStat(username));
+    }
+
+    @RequestMapping(value = "/yearStat", method = RequestMethod.GET)
+    public Map<String, Object> getStatIn1Year(
+            @RequestParam(name = "username", required = true) String username,
+            HttpServletRequest request
+    ) {
+        return BaseResponsePackageUtil.baseData(solutionService.getStat1YearStat(username));
+    }
 }

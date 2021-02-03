@@ -116,4 +116,10 @@ public class UserController {
         ));
     }
 
+    @RequestMapping(value = "/info", method = RequestMethod.GET)
+    public Map<String, Object> getUserInfo(
+            @RequestParam(name = "username", required = true) String username
+    ) {
+        return BaseResponsePackageUtil.baseData(userService.getUserInfo(username));
+    }
 }

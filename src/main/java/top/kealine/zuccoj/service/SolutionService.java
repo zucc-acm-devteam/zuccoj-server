@@ -7,6 +7,7 @@ import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import top.kealine.zuccoj.constant.JudgeResult;
+import top.kealine.zuccoj.entity.DateCount;
 import top.kealine.zuccoj.entity.JudgeTask;
 import top.kealine.zuccoj.entity.Solution;
 import top.kealine.zuccoj.entity.SolutionResult;
@@ -78,4 +79,11 @@ public class SolutionService {
         solutionMapper.updateSolutionResult(solutionResult);
     }
 
+    public List<DateCount> get7DaysStat(String username) {
+        return solutionMapper.getDateCountIn7Days(username);
+    }
+
+    public List<DateCount> getStat1YearStat(String username) {
+        return solutionMapper.getDateCountIn1Year(username);
+    }
 }

@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import top.kealine.zuccoj.entity.User;
+import top.kealine.zuccoj.entity.UserInfo;
 import top.kealine.zuccoj.entity.UserRank;
 
 import java.util.List;
@@ -28,4 +29,10 @@ public interface UserMapper {
             "FROM users ORDER BY solved DESC, submitted DESC \n" +
             "LIMIT #{offset}, #{size}")
     List<UserRank> getUserRank(int offset, int size);
+
+    @Select("SELECT username, nickname, reg_time regTime, school, signature, \n" +
+            "(SELECT COUNT(problem_id) FROM solutions WHERE username=users.username) submitted, \n" +
+            "(SELECT COUNT(DISTINCT problem_id) FROM solutions WHERE result=7 AND username=users.username) solved \n" +
+            "FROM users WHERE username=#{username}")
+    UserInfo getUserInfo(String username);
 }

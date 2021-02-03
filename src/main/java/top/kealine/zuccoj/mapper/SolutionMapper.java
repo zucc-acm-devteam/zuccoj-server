@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import top.kealine.zuccoj.entity.DateCount;
 import top.kealine.zuccoj.entity.JudgeTask;
 import top.kealine.zuccoj.entity.Solution;
 import top.kealine.zuccoj.entity.SolutionResult;
@@ -50,4 +51,26 @@ public interface SolutionMapper {
 
     @Update("UPDATE solutions SET result=#{result}, memory_used=#{memoryUsed}, time_used=#{timeUsed}, remark=#{remark}, judgehost=#{judgehost} WHERE solution_id=#{solutionId}")
     void updateSolutionResult(SolutionResult solutionResult);
+
+    @Select("<script> \n" +
+            "SELECT\n" +
+            "t.date_tag date, \n" +
+            "(SELECT COUNT(*) FROM solutions WHERE DATE(submit_time)=t.date_tag <if test=\"username != null\"> AND username=#{username} </if>) as submitted,\n" +
+            "(SELECT COUNT(*) FROM solutions WHERE DATE(submit_time)=t.date_tag AND result=7 <if test=\"username != null\"> AND username=#{username} </if>) as solved\n" +
+            "FROM (\n" +
+            "SELECT DATE(SUBDATE(NOW(),INTERVAL 0 DAY)) as date_tag UNION ALL\n" +
+            "SELECT DATE(SUBDATE(NOW(),INTERVAL 1 DAY)) as date_tag UNION ALL \n" +
+            "SELECT DATE(SUBDATE(NOW(),INTERVAL 2 DAY)) as date_tag UNION ALL \n" +
+            "SELECT DATE(SUBDATE(NOW(),INTERVAL 3 DAY)) as date_tag UNION ALL \n" +
+            "SELECT DATE(SUBDATE(NOW(),INTERVAL 4 DAY)) as date_tag UNION ALL \n" +
+            "SELECT DATE(SUBDATE(NOW(),INTERVAL 5 DAY)) as date_tag UNION ALL \n" +
+            "SELECT DATE(SUBDATE(NOW(),INTERVAL 6 DAY)) as date_tag\n" +
+            ") t\n" +
+            "ORDER BY t.date_tag\n" +
+            "</script>")
+    List<DateCount> getDateCountIn7Days(String username);
+
+    @Select("SELECT DATE(submit_time) as date, COUNT(*) submitted FROM solutions WHERE username=#{username} \n" +
+            "AND DATE(submit_time) > SUBDATE(NOW(),INTERVAL 1 YEAR) GROUP BY DATE(submit_time)")
+    List<DateCount> getDateCountIn1Year(String username);
 }
