@@ -52,6 +52,9 @@ public interface ContestMapper {
     @Select("SELECT contest_id contestId, problem_order problemOrder, problem_id problemId FROM contest_problem WHERE contest_id=#{contestId} AND problem_order=#{problemOrder}")
     ContestProblem getContestProblemByOrder(int contestId, int problemOrder);
 
+    @Select("SELECT contest_id contestId, problem_order problemOrder, problem_id problemId FROM contest_problem WHERE contest_id=#{contestId} AND problem_id=#{problemId}")
+    ContestProblem getContestProblemByProblemId(int contestId, int problemId);
+
     @Select("SELECT\n" +
             "  contest_id contestId,\n" +
             "  contest_name contestName,\n" +

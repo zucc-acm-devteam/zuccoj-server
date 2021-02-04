@@ -2,6 +2,7 @@ package top.kealine.zuccoj.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableMap;
+import org.apache.ibatis.ognl.EnumerationIterator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -10,17 +11,20 @@ import org.springframework.web.bind.annotation.RestController;
 import top.kealine.zuccoj.constant.PermissionLevel;
 import top.kealine.zuccoj.constant.ResponseConstant;
 import top.kealine.zuccoj.constant.SupportedLanguage;
+import top.kealine.zuccoj.entity.ContestProblem;
 import top.kealine.zuccoj.entity.ProblemInfo;
 import top.kealine.zuccoj.entity.Solution;
 import top.kealine.zuccoj.entity.SolutionResult;
 import top.kealine.zuccoj.entity.SolutionStatus;
 import top.kealine.zuccoj.entity.User;
+import top.kealine.zuccoj.service.ContestService;
 import top.kealine.zuccoj.service.ProblemService;
 import top.kealine.zuccoj.service.SolutionService;
 import top.kealine.zuccoj.service.UserService;
 import top.kealine.zuccoj.util.BaseResponsePackageUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,12 +34,14 @@ public class SolutionController {
     private final UserService userService;
     private final ProblemService problemService;
     private final SolutionService solutionService;
+    private final ContestService contestService;
 
     @Autowired
-    SolutionController(UserService userService, ProblemService problemService, SolutionService solutionService) {
+    SolutionController(UserService userService, ProblemService problemService, SolutionService solutionService, ContestService contestService) {
         this.userService = userService;
         this.problemService = problemService;
         this.solutionService = solutionService;
+        this.contestService = contestService;
     }
 
     @RequestMapping(value = "/submit", method = RequestMethod.POST)
@@ -125,10 +131,37 @@ public class SolutionController {
         if (size == null) {
             size = 20;
         }
+
+        // get real problemId in contest
+        if (contestId != 0 && problemId != null) {
+            ContestProblem contestProblem = contestService.getContestProblemByOrder(contestId, problemId);
+            if (contestProblem == null) {
+                return ResponseConstant.X_NOT_FOUND;
+            }
+            problemId = contestProblem.getProblemId();
+        }
+
         List<SolutionStatus> statuses = solutionService.getSolutionStatus(offset, size, problemId, username, lang, result, judgehost, contestId);
         if (statuses == null) {
             return ResponseConstant.X_NOT_FOUND;
         }
+
+        // hide real problemId in contest
+        if (contestId != 0) {
+            Map<Integer, ContestProblem> map = new HashMap<>();
+            for (SolutionStatus solutionStatus: statuses) {
+                ContestProblem contestProblem = map.getOrDefault(solutionStatus.getProblemId(), null);
+                if (contestProblem == null) {
+                    contestProblem = contestService.getContestProblemByProblemId(contestId, solutionStatus.getProblemId());
+                    if (contestProblem == null) {
+                        return ResponseConstant.X_NOT_FOUND;
+                    }
+                    map.put(solutionStatus.getProblemId(), contestProblem);
+                }
+                solutionStatus.setProblemId(contestProblem.getProblemOrder());
+            }
+        }
+
         return BaseResponsePackageUtil.baseData(statuses);
     }
 

@@ -244,7 +244,7 @@ public class ContestController {
         }
         int contestStatus = contestService.getContestStatus(contestId);
         User user = userService.getUserFromSession(request.getSession());
-        ContestProblem contestProblem = contestService.getContestProblem(contestId, problemOrder);
+        ContestProblem contestProblem = contestService.getContestProblemByOrder(contestId, problemOrder);
         if (contestProblem == null) {
             return ResponseConstant.X_NOT_FOUND;
         }
@@ -289,7 +289,7 @@ public class ContestController {
             return ResponseConstant.X_ACCESS_DENIED;
         }
 
-        ContestProblem contestProblem = contestService.getContestProblem(contestId, problemOrder);
+        ContestProblem contestProblem = contestService.getContestProblemByOrder(contestId, problemOrder);
         if (contestProblem == null) {
             return ResponseConstant.X_NOT_FOUND;
         }
