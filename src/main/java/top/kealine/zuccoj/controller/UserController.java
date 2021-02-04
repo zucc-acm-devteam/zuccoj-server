@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.RestController;
 import top.kealine.zuccoj.constant.PermissionLevel;
 import top.kealine.zuccoj.constant.ResponseConstant;
 import top.kealine.zuccoj.entity.User;
+import top.kealine.zuccoj.entity.UserEdit;
 import top.kealine.zuccoj.entity.UserRank;
 import top.kealine.zuccoj.service.CaptchaService;
 import top.kealine.zuccoj.service.UserService;
 import top.kealine.zuccoj.util.BaseResponsePackageUtil;
+import top.kealine.zuccoj.util.PasswordUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -58,7 +60,6 @@ public class UserController {
             return ResponseConstant.X_USER_FORBIDDEN;
         }
         userService.saveUserToSession(request.getSession(), user);
-        user.setPassword("");
         return ResponseConstant.V_USER_LOGIN_SUCCESS;
     }
 
@@ -121,5 +122,71 @@ public class UserController {
             @RequestParam(name = "username", required = true) String username
     ) {
         return BaseResponsePackageUtil.baseData(userService.getUserInfo(username));
+    }
+
+    @RequestMapping(value = "/edit", method = RequestMethod.GET)
+    public Map<String, Object> getUserEdit(
+            @RequestParam(name = "username", required = true) String username,
+            HttpServletRequest request
+    ) {
+        User user = userService.getUserFromSession(request.getSession());
+        if (user == null) {
+            return ResponseConstant.X_USER_LOGIN_FIRST;
+        }
+        if (!(user.isAdmin() || user.getUsername().equals(username))) {
+            return ResponseConstant.X_ACCESS_DENIED;
+        }
+        UserEdit userEdit = userService.getUserEdit(username);
+        if (userEdit == null) {
+            return ResponseConstant.X_NOT_FOUND;
+        }
+        userEdit.setPassword("");
+        return BaseResponsePackageUtil.baseData(userEdit);
+    }
+
+
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public Map<String, Object> updateUserEdit(
+            @RequestParam(name = "username", required = true) String username,
+            @RequestParam(name = "password", required = true) String password,
+            @RequestParam(name = "nickname", required = false) String nickname,
+            @RequestParam(name = "email", required = false) String email,
+            @RequestParam(name = "signature", required = false) String signature,
+            @RequestParam(name = "school", required = false) String school,
+            @RequestParam(name = "newPassword", required = false) String newPassword,
+            HttpServletRequest request
+    ) {
+        User user = userService.getUserFromSession(request.getSession());
+        if ((user==null) || !(user.isAdmin() || user.getUsername().equals(username))) {
+            return ResponseConstant.X_ACCESS_DENIED;
+        }
+        UserEdit userEdit = userService.getUserEdit(username);
+        if (userEdit == null) {
+            return ResponseConstant.X_NOT_FOUND;
+        }
+        if (!userService.checkUser(username, userEdit.getPassword(), password)) {
+            return ResponseConstant.X_USER_WRONG_PASSWORD;
+        }
+        if (nickname != null) {
+            userEdit.setNickname(nickname);
+        }
+        if (email != null) {
+            userEdit.setEmail(email);
+        }
+        if (signature != null) {
+            userEdit.setSignature(signature);
+        }
+        if (school != null) {
+            userEdit.setSchool(school);
+        }
+        if (newPassword != null) {
+            userEdit.setPassword(userService.generateUserPassword(username, newPassword));
+        }
+        userService.updateUserEdit(userEdit);
+        if (nickname != null) {
+            user.setNickname(nickname);
+            userService.saveUserToSession(request.getSession(), user);
+        }
+        return ResponseConstant.V_UPDATE_SUCCESS;
     }
 }

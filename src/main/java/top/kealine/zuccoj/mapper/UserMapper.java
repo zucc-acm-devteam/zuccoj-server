@@ -3,7 +3,9 @@ package top.kealine.zuccoj.mapper;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import top.kealine.zuccoj.entity.User;
+import top.kealine.zuccoj.entity.UserEdit;
 import top.kealine.zuccoj.entity.UserInfo;
 import top.kealine.zuccoj.entity.UserRank;
 
@@ -35,4 +37,10 @@ public interface UserMapper {
             "(SELECT COUNT(DISTINCT problem_id) FROM solutions WHERE result=7 AND username=users.username) solved \n" +
             "FROM users WHERE username=#{username}")
     UserInfo getUserInfo(String username);
+
+    @Select("SELECT username, nickname, email, signature, school, password FROM users WHERE username=#{username}")
+    UserEdit getUserEdit(String username);
+
+    @Update("UPDATE users SET nickname=#{nickname}, email=#{email}, signature=#{signature}, school=#{school}, password=#{password} WHERE username=#{username}")
+    void updateUserEdit(UserEdit userEdit);
 }

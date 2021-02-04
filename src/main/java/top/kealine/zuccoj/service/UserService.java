@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import top.kealine.zuccoj.entity.User;
 import top.kealine.zuccoj.constant.PermissionLevel;
+import top.kealine.zuccoj.entity.UserEdit;
 import top.kealine.zuccoj.entity.UserInfo;
 import top.kealine.zuccoj.entity.UserRank;
 import top.kealine.zuccoj.mapper.UserMapper;
@@ -22,12 +23,16 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
-    private String generateUserPassword(String username, String password) {
+    public String generateUserPassword(String username, String password) {
         return PasswordUtil.encrypt(username+password);
     }
 
-    public boolean checkUser(User user, String password) {
-        return PasswordUtil.check(user.getPassword(), user.getUsername()+password);
+    public boolean checkUser(User user, String userInput) {
+        return checkUser(user.getUsername(), user.getPassword(), userInput);
+    }
+
+    public boolean checkUser(String username, String password, String userInput) {
+        return PasswordUtil.check(password, username+userInput);
     }
 
     public boolean hasUser(String username) {
@@ -59,6 +64,14 @@ public class UserService {
 
     public UserInfo getUserInfo(String username) {
         return userMapper.getUserInfo(username);
+    }
+
+    public UserEdit getUserEdit(String username) {
+        return userMapper.getUserEdit(username);
+    }
+
+    public void updateUserEdit(UserEdit userEdit) {
+        userMapper.updateUserEdit(userEdit);
     }
 
     public void saveUserToSession(HttpSession session, User user) {
