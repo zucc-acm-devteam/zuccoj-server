@@ -70,9 +70,9 @@ public class JudgehostController {
     public Map<String, Object> judgehostStatus(
             HttpServletRequest request
     ) {
-        if (!userService.checkUserPermission(request.getSession(), PermissionLevel.ADMIN)) {
-            return ResponseConstant.X_ACCESS_DENIED;
-        }
+//        if (!userService.checkUserPermission(request.getSession(), PermissionLevel.ADMIN)) {
+//            return ResponseConstant.X_ACCESS_DENIED;
+//        }
         return BaseResponsePackageUtil.baseData(judgehostService.getJudgehostStatus());
     }
 
