@@ -171,6 +171,9 @@ public class ContestController {
         if (user == null && contestInfo.getStatus() == 0) {
             contestInfo.setStatus(-1);
         }
+        if (user != null && user.isAdmin()) {
+            contestInfo.setStatus(1);
+        }
         return BaseResponsePackageUtil.baseData(contestInfo);
     }
 

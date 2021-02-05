@@ -113,6 +113,26 @@ public interface ContestMapper {
     @Select("SELECT IF(NOW()<begin_time,-1,(IF(NOW()>end_time,1,0))) FROM contest WHERE contest_id = #{contestId}")
     Integer getContestStatus(int contestId);
 
+    @Select("SELECT\n" +
+            "IF(\n" +
+            "  freeze_time is NULL,\n" +
+            "  0,\n" +
+            "  IF(\n" +
+            "    NOW()>=freeze_time,\n" +
+            "    IF(\n" +
+            "      unfreeze_time is NULL,\n" +
+            "      1,\n" +
+            "      IF(\n" +
+            "        NOW()<=unfreeze_time,\n" +
+            "        1,\n" +
+            "        0\n" +
+            "      )\n" +
+            "    ),\n" +
+            "    0\n" +
+            "  )\n" +
+            ") FROM contest WHERE contest_id = #{contestId}")
+    Integer isContestFrozen(int contestId);
+
     @Select("SELECT COUNT(*) FROM contest_member WHERE contest_id = #{contestId} AND username = #{username}")
     int checkMemberOfContest(int contestId, String username);
 
