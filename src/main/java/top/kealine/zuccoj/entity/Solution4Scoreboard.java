@@ -5,6 +5,7 @@ public class Solution4Scoreboard{
     private int contestId;
     private int problemId;
     private String username;
+    private String nickname;
     private String submitTime;
     private int result;
     private int score;
@@ -41,6 +42,14 @@ public class Solution4Scoreboard{
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getSubmitTime() {

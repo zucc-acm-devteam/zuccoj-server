@@ -17,6 +17,7 @@ public interface ScoreboardMapper {
             "    submit_time submitTime,\n" +
             "    result,\n" +
             "    score,\n" +
+            "    (SELECT nickname FROM users WHERE users.username=tb.username) nickname,\n" +
             "    (UNIX_TIMESTAMP(submit_time) - UNIX_TIMESTAMP(begin_time)) penalty,\n" +
             "    IF (freeze_time IS NULL, 0, IF(submit_time >= freeze_time, IF(unfreeze_time IS NULL, 1, IF(submit_time<=unfreeze_time,1,0)), 0)) freeze\n" +
             "FROM (SELECT * FROM contest WHERE contest_id = #{contestId}) ta \n" +

@@ -8,10 +8,11 @@ import top.kealine.zuccoj.entity.ContestProblem;
 import top.kealine.zuccoj.entity.Solution4Scoreboard;
 import top.kealine.zuccoj.mapper.ContestMapper;
 import top.kealine.zuccoj.mapper.ScoreboardMapper;
-import top.kealine.zuccoj.util.scoreboard.ScoreboardCalculator;
-import top.kealine.zuccoj.util.scoreboard.ScoreboardCalculatorICPC;
-import top.kealine.zuccoj.util.scoreboard.ScoreboardCalculatorIOI;
-import top.kealine.zuccoj.util.scoreboard.ScoreboardCalculatorOI;
+import top.kealine.zuccoj.structure.scoreboard.Scoreboard;
+import top.kealine.zuccoj.structure.scoreboard.ScoreboardCalculator;
+import top.kealine.zuccoj.structure.scoreboard.ScoreboardCalculatorICPC;
+import top.kealine.zuccoj.structure.scoreboard.ScoreboardCalculatorIOI;
+import top.kealine.zuccoj.structure.scoreboard.ScoreboardCalculatorOI;
 
 import java.util.List;
 
@@ -66,7 +67,7 @@ public class ScoreboardRunner {
             }
         }
 
-
+        Scoreboard scoreboard = scoreboardCalculator.calculate(true);
     }
 
     private ContestInfo4Scoreboard buildContestInfo(int contestId) {

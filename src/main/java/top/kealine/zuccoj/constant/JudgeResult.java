@@ -1,5 +1,9 @@
 package top.kealine.zuccoj.constant;
 
+import com.google.common.collect.ImmutableSet;
+
+import java.util.Set;
+
 public class JudgeResult {
     // Full Name
     public static final int PENDING = -1;
@@ -25,4 +29,10 @@ public class JudgeResult {
     public static final int AC = ACCEPTED;
     public static final int PE = PRESENTATION_ERROR;
     public static final int SE = SYSTEM_ERROR;
+
+    public static final Set<Integer> IGNORABLE_RESULT = ImmutableSet.of(CE, SE);
+
+    public static boolean isResultIgnorable(int result) {
+        return IGNORABLE_RESULT.contains(result);
+    }
 }
