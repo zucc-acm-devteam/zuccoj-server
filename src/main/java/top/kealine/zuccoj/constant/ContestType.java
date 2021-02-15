@@ -11,4 +11,5 @@ public class ContestType {
     public static final int ICPC = ACM_ICPC;
     public static final int PTA = IOI;
     public static final int LAN_QIAO = OI;
+    public static final int CF = CODEFORCES;
 }

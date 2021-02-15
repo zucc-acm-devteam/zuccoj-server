@@ -1,7 +1,9 @@
 package top.kealine.zuccoj.mapper;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import top.kealine.zuccoj.entity.Solution4Scoreboard;
 
 import java.util.List;
@@ -25,5 +27,13 @@ public interface ScoreboardMapper {
             "ON ta.contest_id = tb.contest_id WHERE submit_time >= begin_time AND submit_time <= end_time \n" +
             "ORDER BY submit_time ASC")
     List<Solution4Scoreboard> getSubmissions(int contestId);
-    
+
+    @Insert("INSERT INTO scoreboard(contest_id) VALUES(#{contestId})")
+    void newContest(int contestId);
+
+    @Update("UPDATE scoreboard SET scoreboard_json=#{scoreboardJson} WHERE contest_id=#{contestId}")
+    void updateScoreboard(int contestId, String scoreboardJson);
+
+    @Select("SELECT contest.contest_id contestId FROM contest JOIN scoreboard ON contest.contest_id=scoreboard.contest_id WHERE (NOW() >= begin_time AND NOW() <= end_time) OR (scoreboard_json is NULL)")
+    List<Integer> getContestNeedCalculate();
 }

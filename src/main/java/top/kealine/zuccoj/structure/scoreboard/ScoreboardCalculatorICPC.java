@@ -170,7 +170,7 @@ public class ScoreboardCalculatorICPC extends ScoreboardCalculator{
             return new Scoreboard.ScoreboardCell(
                     this.wrongTryCount,
                     this.pendingTryCont,
-                    (long) Math.ceil(this.rightTimeInSecond/60.0),
+                    rightTimeInSecond == null ? null : (long) Math.ceil(this.rightTimeInSecond/60.0),
                     this.rightTimeInSecond,
                     0,
                     this.firstBlood

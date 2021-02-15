@@ -20,7 +20,7 @@ public class ScheduleTaskConfig {
     @Async
     @Scheduled(fixedDelay = 1000 * 10)
     public void calculateScoreboard() {
-
+        scoreboardRunner.calculateScoreboardWitchNeed();
     }
 
 }

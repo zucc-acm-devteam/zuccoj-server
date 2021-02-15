@@ -10,16 +10,19 @@ import top.kealine.zuccoj.entity.ContestProblem;
 import top.kealine.zuccoj.entity.ContestProblemInfo;
 import top.kealine.zuccoj.entity.UserNickname;
 import top.kealine.zuccoj.mapper.ContestMapper;
+import top.kealine.zuccoj.mapper.ScoreboardMapper;
 
 import java.util.List;
 
 @Service
 public class ContestService {
     private final ContestMapper contestMapper;
+    private final ScoreboardMapper scoreboardMapper;
 
     @Autowired
-    ContestService(ContestMapper contestMapper) {
+    ContestService(ContestMapper contestMapper, ScoreboardMapper scoreboardMapper) {
         this.contestMapper = contestMapper;
+        this.scoreboardMapper = scoreboardMapper;
     }
 
     public Contest getContest(int contestId) {
@@ -47,6 +50,7 @@ public class ContestService {
         int contestId = contest.getContestId();
         List<ContestProblem> contestProblems = ContestProblem.buildContestProblemList(contestId, problemListJson);
         contestProblems.forEach(contestMapper::insertContestProblem);
+        scoreboardMapper.newContest(contestId);
         return contestId;
     }
 

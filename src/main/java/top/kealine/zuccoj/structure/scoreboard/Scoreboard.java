@@ -1,5 +1,6 @@
 package top.kealine.zuccoj.structure.scoreboard;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import top.kealine.zuccoj.constant.ContestType;
 
 import java.util.ArrayList;
@@ -67,7 +68,20 @@ public class Scoreboard {
         }
         this.scoreboardList.sort(comparator);
 
+        int rank=0;
+        for(ScoreboardEach each: this.scoreboardList) {
+            each.setRank(++rank);
+        }
+
         this.done = true;
+    }
+
+    public String toJSON(ObjectMapper objectMapper) {
+        return toJSON(objectMapper, false);
+    }
+
+    public String toJSON(ObjectMapper objectMapper, boolean format) {
+        return ScoreboardJsonify.jsonify(this, objectMapper, format);
     }
 
     public static class ScoreboardEach {
@@ -83,6 +97,10 @@ public class Scoreboard {
             return username;
         }
 
+        public String getNickname() {
+            return nickname;
+        }
+
         public int getPoint() {
             return point;
         }
@@ -95,6 +113,17 @@ public class Scoreboard {
             return score;
         }
 
+        public void setRank(int rank) {
+            this.rank = rank;
+        }
+
+        public int getRank() {
+            return rank;
+        }
+
+        public List<ScoreboardCell> getCells() {
+            return cells;
+        }
 
         public ScoreboardEach(String username, String nickname, List<ScoreboardCell> cells) {
             this.username = username;
@@ -168,5 +197,25 @@ public class Scoreboard {
             return firstBlood;
         }
 
+    }
+
+    public long getUpdateTime() {
+        return updateTime;
+    }
+
+    public int getProblemCount() {
+        return problemCount;
+    }
+
+    public int getContestType() {
+        return contestType;
+    }
+
+    public boolean isDone() {
+        return done;
+    }
+
+    public List<ScoreboardEach> getScoreboardList() {
+        return scoreboardList;
     }
 }
