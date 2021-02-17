@@ -25,7 +25,6 @@ import static top.kealine.zuccoj.constant.ContestType.OI;
 
 @Service
 public class ScoreboardRunner {
-    private final String REDIS_SCOREBOARD_KEY = "ZUCCOJ::SCOREBOARD";
     private final ScoreboardMapper scoreboardMapper;
     private final ContestMapper contestMapper;
     private final ObjectMapper objectMapper;
@@ -93,9 +92,11 @@ public class ScoreboardRunner {
         Scoreboard scoreboard = scoreboardCalculator.calculate(true);
         String scoreboardJson = scoreboard.toJSON(objectMapper);
         HashOperations<String, String, String> hashOps = redisTemplate.opsForHash();
-        hashOps.put("ZUCCOJ::SCOREBOARD", Integer.toString(contestId), scoreboardJson);
+        hashOps.put(ScoreboardService.REDIS_SCOREBOARD_KEY, Integer.toString(contestId), scoreboardJson);
         if (force || (contestStatus > 0 && contestFrozen == 0)) {
-            scoreboardMapper.updateScoreboard(contestId, scoreboardJson);
+            scoreboardMapper.updateScoreboardInDB(contestId, scoreboardJson);
+        } else {
+            scoreboardMapper.deleteScoreboardCacheInDB(contestId);
         }
     }
 
@@ -104,8 +105,7 @@ public class ScoreboardRunner {
         if (contest == null) {
             return null;
         }
-        ContestInfo4Scoreboard result = new ContestInfo4Scoreboard(contest, contestMapper.getContestStatus(contestId), contestMapper.isContestFrozen(contestId) == 1);
-        return result;
+        return new ContestInfo4Scoreboard(contest, contestMapper.getContestStatus(contestId), contestMapper.isContestFrozen(contestId) == 1);
     }
 
 }

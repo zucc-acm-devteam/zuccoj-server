@@ -18,6 +18,7 @@ import top.kealine.zuccoj.entity.ProblemDisplay;
 import top.kealine.zuccoj.entity.User;
 import top.kealine.zuccoj.service.ContestService;
 import top.kealine.zuccoj.service.ProblemService;
+import top.kealine.zuccoj.service.ScoreboardService;
 import top.kealine.zuccoj.service.SolutionService;
 import top.kealine.zuccoj.service.UserService;
 import top.kealine.zuccoj.util.BaseResponsePackageUtil;
@@ -35,13 +36,21 @@ public class ContestController {
     private final ProblemService problemService;
     private final SolutionService solutionService;
     private final UserService userService;
+    private final ScoreboardService scoreboardService;
 
     @Autowired
-    ContestController(ContestService contestService, ProblemService problemService, SolutionService solutionService, UserService userService) {
+    ContestController(
+            ContestService contestService,
+            ProblemService problemService,
+            SolutionService solutionService,
+            UserService userService,
+            ScoreboardService scoreboardService
+    ) {
         this.contestService = contestService;
         this.userService = userService;
         this.problemService = problemService;
         this.solutionService = solutionService;
+        this.scoreboardService = scoreboardService;
     }
 
     @RequestMapping(value = "/new", method = RequestMethod.POST)
@@ -304,5 +313,20 @@ public class ContestController {
 
         long solutionId = solutionService.newSolution(contestProblem.getProblemId(), user.getUsername(), code, lang, contestId);
         return BaseResponsePackageUtil.baseData(ImmutableMap.of("solutionId", solutionId));
+    }
+
+    @RequestMapping(value = "/scoreboard", method = RequestMethod.GET)
+    public Map<String, Object> getScoreboard(
+            @RequestParam(name = "contestId", required = true) int contestId,
+            @RequestParam(name = "real", required = false) Boolean real,
+            HttpServletRequest request
+    ) {
+        //TODO: real scoreboard for admin
+        if (real != null && real) {
+            if (!userService.checkUserPermission(request.getSession(), PermissionLevel.ADMIN)) {
+                return ResponseConstant.X_ACCESS_DENIED;
+            }
+        }
+        return BaseResponsePackageUtil.baseData(scoreboardService.getScoreboard(contestId));
     }
 }

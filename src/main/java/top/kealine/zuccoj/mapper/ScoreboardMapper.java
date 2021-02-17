@@ -10,7 +10,6 @@ import java.util.List;
 
 @Mapper
 public interface ScoreboardMapper {
-
     @Select("SELECT\n" +
             "    ta.contest_id contestId,\n" +
             "    solution_id solutionId,\n" +
@@ -32,7 +31,13 @@ public interface ScoreboardMapper {
     void newContest(int contestId);
 
     @Update("UPDATE scoreboard SET scoreboard_json=#{scoreboardJson} WHERE contest_id=#{contestId}")
-    void updateScoreboard(int contestId, String scoreboardJson);
+    void updateScoreboardInDB(int contestId, String scoreboardJson);
+
+    @Update("UPDATE scoreboard SET scoreboard_json=NULL WHERE contest_id=#{contestId}")
+    void deleteScoreboardCacheInDB(int contestId);
+
+    @Select("SELECT scoreboard_json FROM scoreboard WHERE contest_id=#{contestId}")
+    String getScoreboardFromDB(int contestId);
 
     @Select("SELECT contest.contest_id contestId FROM contest JOIN scoreboard ON contest.contest_id=scoreboard.contest_id WHERE (NOW() >= begin_time AND NOW() <= end_time) OR (scoreboard_json is NULL)")
     List<Integer> getContestNeedCalculate();
