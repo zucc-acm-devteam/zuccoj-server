@@ -25,6 +25,7 @@ public class ScoreboardJsonify {
         root.put("updateTime", scoreboard.getUpdateTime());
         root.put("problemCount", scoreboard.getProblemCount());
         root.put("contestType", scoreboard.getContestType());
+        root.put("contestFrozen", scoreboard.isContestFrozen());
         ArrayNode scoreboardArray = root.putArray("scoreboard");
 
 

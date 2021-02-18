@@ -13,12 +13,14 @@ public class Scoreboard {
     private final long updateTime;
     private final int problemCount;
     private final int contestType;
+    private final boolean contestFrozen;
     private final Map<String, ScoreboardEach> scoreboardMap;
 
-    public Scoreboard(long updateTime, int problemCount, int contestType) {
+    public Scoreboard(long updateTime, int problemCount, int contestType, boolean contestFrozen) {
         this.updateTime = updateTime;
         this.problemCount = problemCount;
         this.contestType = contestType;
+        this.contestFrozen = contestFrozen;
         this.scoreboardMap = new HashMap<>();
         this.done = false;
     }
@@ -141,6 +143,7 @@ public class Scoreboard {
                 if (cell.getRightTime() != null) {
                     this.point++;
                     this.penalty += cell.getWrongTryCount() * 20L;
+                    this.penalty += cell.rightTime;
                 }
                 this.score += cell.getScore();
             }
@@ -209,6 +212,10 @@ public class Scoreboard {
 
     public int getContestType() {
         return contestType;
+    }
+
+    public boolean isContestFrozen() {
+        return contestFrozen;
     }
 
     public boolean isDone() {

@@ -91,7 +91,7 @@ public class ScoreboardCalculatorICPC extends ScoreboardCalculator{
     }
 
     private Scoreboard buildICPCScoreboard() {
-        Scoreboard scoreboard = new Scoreboard(System.currentTimeMillis(), this.problemList.size(), this.contestInfo.getContestType());
+        Scoreboard scoreboard = new Scoreboard(System.currentTimeMillis(), this.problemList.size(), this.contestInfo.getContestType(), this.contestInfo.isContestFrozen());
 
         for (Map.Entry<String, ICPCScoreboardBuilder> entry: userStatus.entrySet()) {
             List<Scoreboard.ScoreboardCell> cells = new ArrayList<>(this.problemList.size());

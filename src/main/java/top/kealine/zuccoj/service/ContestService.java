@@ -71,6 +71,7 @@ public class ContestService {
         for (int i=oldContestProblemCount;i<newContestProblemCount;i++) {
             contestMapper.insertContestProblem(contestProblems.get(i));
         }
+        scoreboardMapper.deleteScoreboardCacheInDB(contestId);
     }
 
     public ContestInfo getContestInfo(String username, int contestId) {
