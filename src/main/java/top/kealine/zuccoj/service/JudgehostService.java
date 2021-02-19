@@ -59,6 +59,15 @@ public class JudgehostService {
         judgehostMapper.newJudgehost(name, newPassword);
     }
 
+    public void deleteJudgehost(String name) {
+        judgehostMapper.deleteJudgehost(name);
+    }
+
+    public void updateJudgehost(String name, String password) {
+        String newPassword = PasswordUtil.encrypt(name+password);
+        judgehostMapper.updateJudgehost(name, newPassword);
+    }
+
     public List<JudgehostStatus> getJudgehostStatus() {
         List<Judgehost> judgehosts = judgehostMapper.getJudgehostList();
         ValueOperations<String,String> ops = redisTemplate.opsForValue();

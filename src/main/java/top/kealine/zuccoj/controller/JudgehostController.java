@@ -63,7 +63,42 @@ public class JudgehostController {
         }
         judgehostService.newJudgehost(username, password);
         judgehostService.log(username, IpUtil.getIpAddr(request), String.format("New judgehost by %s",userService.getUserFromSession(request.getSession()).getUsername()));
-        return BaseResponsePackageUtil.succeedMessage();
+        return ResponseConstant.V_ADD_SUCCESS;
+    }
+
+    @RequestMapping(value = "/delete", method = {RequestMethod.POST, RequestMethod.DELETE})
+    public Map<String, Object> deleteJudgehost(
+            @RequestParam(name = "username", required = true) String username,
+            HttpServletRequest request
+    ) {
+        if (!userService.checkUserPermission(request.getSession(), PermissionLevel.ADMIN)) {
+            return ResponseConstant.X_ACCESS_DENIED;
+        }
+        Judgehost judgehost = judgehostService.getJudgehostByName(username);
+        if (judgehost == null) {
+            return ResponseConstant.X_NOT_FOUND;
+        }
+        judgehostService.deleteJudgehost(username);
+        judgehostService.log(username, IpUtil.getIpAddr(request), String.format("Delete judgehost by %s",userService.getUserFromSession(request.getSession()).getUsername()));
+        return ResponseConstant.V_DELETE_SUCCESS;
+    }
+
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public Map<String, Object> updateJudgehost(
+            @RequestParam(name = "username", required = true) String username,
+            @RequestParam(name = "password", required = true) String password,
+            HttpServletRequest request
+    ) {
+        if (!userService.checkUserPermission(request.getSession(), PermissionLevel.ADMIN)) {
+            return ResponseConstant.X_ACCESS_DENIED;
+        }
+        Judgehost judgehost = judgehostService.getJudgehostByName(username);
+        if (judgehost == null) {
+            return ResponseConstant.X_NOT_FOUND;
+        }
+        judgehostService.updateJudgehost(username, password);
+        judgehostService.log(username, IpUtil.getIpAddr(request), String.format("Update judgehost by %s",userService.getUserFromSession(request.getSession()).getUsername()));
+        return ResponseConstant.V_UPDATE_SUCCESS;
     }
 
     @RequestMapping(value = "/status", method = RequestMethod.GET)
