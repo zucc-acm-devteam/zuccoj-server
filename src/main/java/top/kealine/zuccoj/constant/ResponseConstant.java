@@ -50,4 +50,7 @@ public class ResponseConstant {
 
     // Judgehost
     public static final Map<String, Object> X_JUDGEHOST_DUE = BaseResponsePackageUtil.errorMessage("验证过期", 700);
+
+    // Other
+    public static final Map<String, Object> X_CUT_HAIR_BY_SELF = BaseResponsePackageUtil.errorMessage("不能给自己剪头发！");
 }

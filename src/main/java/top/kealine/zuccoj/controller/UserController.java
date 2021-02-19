@@ -10,10 +10,12 @@ import top.kealine.zuccoj.constant.PermissionLevel;
 import top.kealine.zuccoj.constant.ResponseConstant;
 import top.kealine.zuccoj.entity.User;
 import top.kealine.zuccoj.entity.UserEdit;
+import top.kealine.zuccoj.entity.UserFull;
 import top.kealine.zuccoj.entity.UserRank;
 import top.kealine.zuccoj.service.CaptchaService;
 import top.kealine.zuccoj.service.UserService;
 import top.kealine.zuccoj.util.BaseResponsePackageUtil;
+import top.kealine.zuccoj.util.IpUtil;
 import top.kealine.zuccoj.util.PasswordUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -60,6 +62,7 @@ public class UserController {
             return ResponseConstant.X_USER_FORBIDDEN;
         }
         userService.saveUserToSession(request.getSession(), user);
+        userService.userAccess(username, IpUtil.getIpAddr(request));
         return ResponseConstant.V_USER_LOGIN_SUCCESS;
     }
 
@@ -76,6 +79,7 @@ public class UserController {
             return ResponseConstant.X_USER_LOGIN_FIRST;
         }
         user.setPassword("");
+        userService.userAccess(user.getUsername(), IpUtil.getIpAddr(request));
         return BaseResponsePackageUtil.baseData(user);
     }
 
@@ -164,7 +168,7 @@ public class UserController {
         if (userEdit == null) {
             return ResponseConstant.X_NOT_FOUND;
         }
-        if (!userService.checkUser(username, userEdit.getPassword(), password)) {
+        if (!userService.checkUser(username, userEdit.getPassword(), password) && !user.isAdmin()) {
             return ResponseConstant.X_USER_WRONG_PASSWORD;
         }
         if (nickname != null) {
@@ -189,4 +193,53 @@ public class UserController {
         }
         return ResponseConstant.V_UPDATE_SUCCESS;
     }
+
+    @RequestMapping(value = "/full", method = RequestMethod.GET)
+    public Map<String, Object> getFullInfo(
+            @RequestParam(value = "username", required = true) String username,
+            HttpServletRequest request
+    ) {
+        if (!userService.checkUserPermission(request.getSession(), PermissionLevel.ADMIN)) {
+            return ResponseConstant.X_ACCESS_DENIED;
+        }
+        UserFull user = userService.getUserFullByUsername(username);
+        if (user == null) {
+            return ResponseConstant.X_USER_NOT_FOUND;
+        }
+        return BaseResponsePackageUtil.baseData(user);
+    }
+
+    @RequestMapping(value = "/status", method = RequestMethod.POST)
+    public Map<String, Object> changeStatus(
+            @RequestParam(value = "username", required = true) String username,
+            @RequestParam(value = "status", required = true) int status,
+            HttpServletRequest request
+    ) {
+        User user = userService.getUserFromSession(request.getSession());
+        if (!userService.checkUserPermission(user, PermissionLevel.ADMIN)) {
+            return ResponseConstant.X_ACCESS_DENIED;
+        }
+        if (user.getUsername().equals(username)) {
+            return ResponseConstant.X_CUT_HAIR_BY_SELF;
+        }
+
+        user = userService.getUserByUsername(username);
+        if (user == null) {
+            return ResponseConstant.X_USER_NOT_FOUND;
+        }
+        userService.updateUserStatus(username, status);
+        return ResponseConstant.V_UPDATE_SUCCESS;
+    }
+
+    @RequestMapping(value = "/permission", method = RequestMethod.GET)
+    public Map<String, Object> getUserWithPermission(
+            HttpServletRequest request
+    ) {
+        if (!userService.checkUserPermission(request.getSession(), PermissionLevel.ADMIN)) {
+            return ResponseConstant.X_ACCESS_DENIED;
+        }
+        return BaseResponsePackageUtil.baseData(userService.getUserWithPermission());
+    }
+
+
 }

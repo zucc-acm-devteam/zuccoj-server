@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import top.kealine.zuccoj.entity.User;
 import top.kealine.zuccoj.entity.UserEdit;
+import top.kealine.zuccoj.entity.UserFull;
 import top.kealine.zuccoj.entity.UserInfo;
 import top.kealine.zuccoj.entity.UserRank;
 
@@ -43,4 +44,16 @@ public interface UserMapper {
 
     @Update("UPDATE users SET nickname=#{nickname}, email=#{email}, signature=#{signature}, school=#{school}, password=#{password} WHERE username=#{username}")
     void updateUserEdit(UserEdit userEdit);
+
+    @Update("UPDATE users SET ip=#{ip},access_time=NOW() WHERE username=#{username}")
+    void userAccess(String username, String ip);
+
+    @Update("UPDATE users SET status=#{status} WHERE username=#{username}")
+    void updateUserStatus(String username, int status);
+
+    @Select("SELECT username, email, ip, access_time accessTime, reg_time regTime, nickname, school, status, signature FROM users WHERE username=#{username}")
+    UserFull getUserFullByUsername(String username);
+
+    @Select("SELECT username, email, ip, access_time accessTime, reg_time regTime, nickname, school, status, signature FROM users WHERE status > 0")
+    List<UserFull> getUserWithPermission();
 }

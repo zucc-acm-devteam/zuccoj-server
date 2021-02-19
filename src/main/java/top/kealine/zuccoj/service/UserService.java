@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import top.kealine.zuccoj.entity.User;
 import top.kealine.zuccoj.constant.PermissionLevel;
 import top.kealine.zuccoj.entity.UserEdit;
+import top.kealine.zuccoj.entity.UserFull;
 import top.kealine.zuccoj.entity.UserInfo;
 import top.kealine.zuccoj.entity.UserRank;
 import top.kealine.zuccoj.mapper.UserMapper;
@@ -72,6 +73,33 @@ public class UserService {
 
     public void updateUserEdit(UserEdit userEdit) {
         userMapper.updateUserEdit(userEdit);
+    }
+
+    public void userAccess(String username, String ip) {
+        userMapper.userAccess(username, ip);
+    }
+
+    public void updateUserStatus(String username, int status) {
+        userMapper.updateUserStatus(username, status);
+    }
+
+    public UserFull getUserFullByUsername(String username) {
+        UserFull userFull = userMapper.getUserFullByUsername(username);
+        if (userFull == null) {
+            return null;
+        }
+        userFull.setStatusText(PermissionLevel.toText(userFull.getStatus()));
+        return userFull;
+    }
+
+    public List<UserFull> getUserWithPermission() {
+        List<UserFull> userFulls = userMapper.getUserWithPermission();
+        userFulls.forEach(
+                userFull -> {
+                    userFull.setStatusText(PermissionLevel.toText(userFull.getStatus()));
+                }
+        );
+        return userFulls;
     }
 
     public void saveUserToSession(HttpSession session, User user) {
