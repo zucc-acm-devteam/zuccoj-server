@@ -1,20 +1,29 @@
 package top.kealine.zuccoj;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 import top.kealine.zuccoj.config.OnlineJudgeConfig;
+import top.kealine.zuccoj.constant.JudgeResult;
+import top.kealine.zuccoj.service.SolutionService;
 
 import java.io.File;
+import java.util.List;
 
 @Component
 public class OnlineJudgeInitializer implements ApplicationRunner {
     private final OnlineJudgeConfig config;
+    private final SolutionService solutionService;
 
     @Autowired
-    OnlineJudgeInitializer(OnlineJudgeConfig config) {
+    OnlineJudgeInitializer(
+            OnlineJudgeConfig config,
+            SolutionService solutionService
+    ) {
         this.config = config;
+        this.solutionService = solutionService;
     }
 
     private void clearTempDir(File tempDir) throws Exception {
@@ -59,8 +68,29 @@ public class OnlineJudgeInitializer implements ApplicationRunner {
         clearTempDir(tempDir);
     }
 
+    private void rejudgePendingSolution() throws JsonProcessingException {
+        List<Long> pendingTasks = this.solutionService.getAllSolutionWithResult(JudgeResult.PENDING);
+        for (Long solutionId: pendingTasks) {
+            this.solutionService.publishTask(solutionId);
+        }
+    }
+
+    private void rejudgeSystemErrorSolution()  throws JsonProcessingException {
+        List<Long> seTasks = this.solutionService.getAllSolutionWithResult(JudgeResult.SYSTEM_ERROR);
+        for (Long solutionId: seTasks) {
+            this.solutionService.rejudgeSolution(solutionId);
+        }
+    }
+
+    private void initializeTaskQueue() throws Exception{
+        this.solutionService.cancelAllTask();
+        this.rejudgePendingSolution();
+        this.rejudgeSystemErrorSolution();
+    }
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
         fileDirCheck();
+        initializeTaskQueue();
     }
 }

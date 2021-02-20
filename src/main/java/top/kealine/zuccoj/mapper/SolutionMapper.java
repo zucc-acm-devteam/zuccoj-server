@@ -73,4 +73,7 @@ public interface SolutionMapper {
     @Select("SELECT DATE(submit_time) as date, COUNT(*) submitted FROM solutions WHERE username=#{username} \n" +
             "AND DATE(submit_time) > SUBDATE(NOW(),INTERVAL 1 YEAR) GROUP BY DATE(submit_time)")
     List<DateCount> getDateCountIn1Year(String username);
+
+    @Select("SELECT solution_id FROM solutions WHERE result=#{result}")
+    List<Long> getAllSolutionWithResult(int result);
 }

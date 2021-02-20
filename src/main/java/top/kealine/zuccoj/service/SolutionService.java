@@ -61,6 +61,10 @@ public class SolutionService {
         return solutionMapper.getSolutionStatus(offset, size, problemId, username, lang, result, judgehost, contestId);
     }
 
+    public List<Long> getAllSolutionWithResult(int result) {
+        return solutionMapper.getAllSolutionWithResult(result);
+    }
+
     public JudgeTask generateJudgeTask(long solutionId) {
         JudgeTask judgeTask = solutionMapper.generateJudgeTask(solutionId);
         List<Integer> testcaseList = testcaseMapper.getTestcaseIdByProblemId(judgeTask.getProblemId());
@@ -73,6 +77,16 @@ public class SolutionService {
         String judgeTaskString = new ObjectMapper().writeValueAsString(judgeTask);
         ListOperations<String,String> ops = redisTemplate.opsForList();
         ops.leftPush(JUDGE_TASK_QUEUE_KEY, judgeTaskString);
+    }
+
+    public void cancelAllTask() {
+       redisTemplate.delete(JUDGE_TASK_QUEUE_KEY);
+    }
+
+    public void rejudgeSolution(long solutionId) throws JsonProcessingException {
+        SolutionResult solutionResult = new SolutionResult(solutionId, 0, 0, 0, "REJUDGING...", "REJUDGING...");
+        updateSolutionResult(solutionResult);
+        publishTask(solutionId);
     }
 
     public void updateSolutionResult(SolutionResult solutionResult) {

@@ -80,7 +80,7 @@ public class SolutionController {
 
     @RequestMapping(value = "/get", method = RequestMethod.GET)
     public Map<String, Object> getSolution(
-            @RequestParam(name = "solutionId", required = true) int solutionId,
+            @RequestParam(name = "solutionId", required = true) long solutionId,
             HttpServletRequest request
     ) {
         User user = userService.getUserFromSession(request.getSession());
@@ -101,9 +101,29 @@ public class SolutionController {
         }
     }
 
+    @RequestMapping(value = "/rejudge", method = RequestMethod.POST)
+    public Map<String, Object> rejudgeSolution(
+            @RequestParam(name = "solutionId", required = true) long solutionId,
+            HttpServletRequest request
+    ) {
+        if (!userService.checkUserPermission(request.getSession(), PermissionLevel.ADMIN)) {
+            return ResponseConstant.X_ACCESS_DENIED;
+        }
+        if (solutionService.getSolutionById(solutionId) == null) {
+            return ResponseConstant.X_NOT_FOUND;
+        }
+        try {
+            solutionService.rejudgeSolution(solutionId);
+            return BaseResponsePackageUtil.succeedMessage();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return BaseResponsePackageUtil.errorMessage();
+        }
+    }
+
     @RequestMapping(value = "/result", method = RequestMethod.GET)
     public Map<String, Object> getResult(
-            @RequestParam(name = "solutionId", required = true) int solutionId,
+            @RequestParam(name = "solutionId", required = true) long solutionId,
             HttpServletRequest request
     ) {
         SolutionResult result = solutionService.getSolutionResultById(solutionId);
