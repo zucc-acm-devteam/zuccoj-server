@@ -8,9 +8,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import top.kealine.zuccoj.constant.ContestType;
+import top.kealine.zuccoj.constant.JudgeResult;
 import top.kealine.zuccoj.constant.PermissionLevel;
 import top.kealine.zuccoj.constant.ResponseConstant;
 import top.kealine.zuccoj.constant.SupportedLanguage;
+import top.kealine.zuccoj.entity.Contest;
 import top.kealine.zuccoj.entity.ContestProblem;
 import top.kealine.zuccoj.entity.ProblemInfo;
 import top.kealine.zuccoj.entity.Solution;
@@ -92,8 +95,30 @@ public class SolutionController {
             return ResponseConstant.X_NOT_FOUND;
         }
         if (user.isAdmin() || user.getUsername().equals(solution.getUsername())) {
+            // hide info in Contest
             if (solution.getContestId() != 0) {
-                solution.setProblemId(0);
+                int contestType = contestService.getContestType(solution.getContestId());
+                int contestStatus = contestService.getContestStatus(solution.getContestId());
+
+                switch (contestType) {
+                    case ContestType.IOI:
+                    case ContestType.ACM: {
+                        break;
+                    }
+                    case ContestType.OI: {
+                        if (contestStatus <= 0) {
+                            solution.setResult(JudgeResult.UNKNOWN);
+                            solution.setTimeUsed(0);
+                            solution.setMemoryUsed(0);
+                            solution.setRemark("");
+                        }
+                        break;
+                    }
+                }
+
+                if (contestStatus <= 0) {
+                    solution.setProblemId(0);
+                }
             }
             return BaseResponsePackageUtil.baseData(solution);
         } else {
@@ -152,22 +177,41 @@ public class SolutionController {
             size = 20;
         }
 
-        // get real problemId in contest
-        if (contestId != 0 && problemId != null) {
-            ContestProblem contestProblem = contestService.getContestProblemByOrder(contestId, problemId);
-            if (contestProblem == null) {
-                return ResponseConstant.X_NOT_FOUND;
+        int contestType = 0;
+        int contestStatus = 0;
+
+        User user = userService.getUserFromSession(request.getSession());
+        if (contestId != 0) {
+            if (user == null) {
+                return ResponseConstant.X_USER_LOGIN_FIRST;
             }
-            problemId = contestProblem.getProblemId();
+            contestType = contestService.getContestType(contestId);
+            contestStatus = contestService.getContestStatus(contestId);
+
+            // when contest is not end, user cannot get others' result
+            if (!user.isAdmin() && !user.getUsername().equals(username) && contestStatus <= 0) {
+                return ResponseConstant.X_ACCESS_DENIED;
+            }
+
+            // get real problemId in contest
+            if (problemId != null) {
+                ContestProblem contestProblem = contestService.getContestProblemByOrder(contestId, problemId);
+                if (contestProblem == null) {
+                    return ResponseConstant.X_NOT_FOUND;
+                }
+                problemId = contestProblem.getProblemId();
+            }
+
         }
 
+        // get real data
         List<SolutionStatus> statuses = solutionService.getSolutionStatus(offset, size, problemId, username, lang, result, judgehost, contestId);
         if (statuses == null) {
             return ResponseConstant.X_NOT_FOUND;
         }
 
-        // hide real problemId in contest
-        if (contestId != 0) {
+        // hide some info when contest is not end
+        if (contestId != 0 && contestStatus <= 0) {
             Map<Integer, ContestProblem> map = new HashMap<>();
             for (SolutionStatus solutionStatus: statuses) {
                 ContestProblem contestProblem = map.getOrDefault(solutionStatus.getProblemId(), null);
@@ -179,6 +223,13 @@ public class SolutionController {
                     map.put(solutionStatus.getProblemId(), contestProblem);
                 }
                 solutionStatus.setProblemId(contestProblem.getProblemOrder());
+            }
+            if (contestType == ContestType.OI) {
+                for (SolutionStatus solutionStatus: statuses) {
+                    solutionStatus.setResult(JudgeResult.UNKNOWN);
+                    solutionStatus.setTimeUsed(0);
+                    solutionStatus.setMemoryUsed(0);
+                }
             }
         }
 

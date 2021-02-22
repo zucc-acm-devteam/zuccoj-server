@@ -113,6 +113,9 @@ public interface ContestMapper {
     @Select("SELECT IF(NOW()<begin_time,-1,(IF(NOW()>end_time,1,0))) FROM contest WHERE contest_id = #{contestId}")
     Integer getContestStatus(int contestId);
 
+    @Select("SELECT contest_type FROM contest WHERE contest_id=#{contestId}")
+    Integer getContestType(int contestId);
+
     @Select("SELECT\n" +
             "IF(\n" +
             "  freeze_time is NULL,\n" +

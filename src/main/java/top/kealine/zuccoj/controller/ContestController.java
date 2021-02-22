@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import top.kealine.zuccoj.constant.ContestType;
 import top.kealine.zuccoj.constant.PermissionLevel;
 import top.kealine.zuccoj.constant.ResponseConstant;
 import top.kealine.zuccoj.constant.SupportedLanguage;
@@ -72,6 +73,20 @@ public class ContestController {
         if (password == null) {
             password = "";
         }
+
+        switch (contestType) {
+            case ContestType.OI: {
+                freezeTime = beginTime;
+                unfreezeTime = endTime;
+                break;
+            }
+            case ContestType.IOI: {
+                freezeTime = null;
+                unfreezeTime = null;
+                break;
+            }
+        }
+
         Contest contest = new Contest(contestName, beginTime, endTime, freezeTime, unfreezeTime, isPublic, password, contestType);
         try {
             return BaseResponsePackageUtil.baseData(contestService.newContest(contest, problems));
@@ -129,9 +144,26 @@ public class ContestController {
         if (oldContest == null) {
             return ResponseConstant.X_NOT_FOUND;
         }
+        switch (contestType) {
+            case ContestType.ACM: {
+                break;
+            }
+            case ContestType.OI: {
+                freezeTime = beginTime;
+                unfreezeTime = endTime;
+                break;
+            }
+            case ContestType.IOI: {
+                freezeTime = null;
+                unfreezeTime = null;
+                break;
+            }
+        }
+
         if (password == null) {
             password = "";
         }
+
         Contest contest = new Contest(contestId, contestName, beginTime, endTime, freezeTime, unfreezeTime, isPublic, password, contestType);
         try {
             contestService.updateContest(contest, problems);
@@ -240,6 +272,9 @@ public class ContestController {
         int contestStatus = contestService.getContestStatus(contestId);
         if (contestStatus < 1) {
             contestProblemInfoList.forEach(ContestProblemInfo::hideProblemId);
+        }
+        if (contest.getContestType() == ContestType.OI) {
+            contestProblemInfoList.forEach(ContestProblemInfo::hideProblemInfoInOI);
         }
         return BaseResponsePackageUtil.baseData(contestProblemInfoList);
     }

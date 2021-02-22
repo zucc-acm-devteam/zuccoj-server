@@ -16,6 +16,12 @@ public class ContestProblemInfo {
         this.realProblemId = this.problemId;
     }
 
+    public void hideProblemInfoInOI() {
+        this.status = 0;
+        this.submitted = -1;
+        this.solved = -1;
+    }
+
     public int getContestId() {
         return contestId;
     }

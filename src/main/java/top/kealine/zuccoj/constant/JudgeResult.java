@@ -7,6 +7,7 @@ import java.util.Set;
 public class JudgeResult {
     // Full Name
     public static final int PENDING = -1;
+    public static final int UNKNOWN = 0;
     public static final int COMPILE_ERROR = 1;
     public static final int TIME_LIMIT_EXCEED = 2;
     public static final int MEMORY_LIMIT_EXCEED = 3;
@@ -20,6 +21,7 @@ public class JudgeResult {
 
     // Short Name
     public static final int PD = PENDING;
+    public static final int UK = UNKNOWN;
     public static final int CE = COMPILE_ERROR;
     public static final int TLE = TIME_LIMIT_EXCEED;
     public static final int MLE = MEMORY_LIMIT_EXCEED;

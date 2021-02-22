@@ -102,6 +102,10 @@ public class ContestService {
         return contestMapper.getContestStatus(contestId);
     }
 
+    public Integer getContestType(int contestId) {
+        return contestMapper.getContestType(contestId);
+    }
+
     public List<ContestProblemInfo> getContestProblemInfoList(int contestId, String username) {
         return contestMapper.getContestProblemInfoList(contestId, username);
     }

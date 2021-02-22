@@ -74,8 +74,11 @@ public class ScoreboardJsonify {
         List<Scoreboard.ScoreboardCell> cells = eachData.getCells();
         for (Scoreboard.ScoreboardCell cell: cells) {
             ObjectNode cellJson = mapper.createObjectNode();
+            cellJson.put("pending", cell.getPendingTryCont() > 0);
+            cellJson.put("try", !(cell.getWrongTryCount() == 0 && cell.getPendingTryCont() == 0 && cell.getRightTime() == null));
             cellJson.put("score", cell.getScore());
             cellJson.put("firstBlood", cell.isFirstBlood());
+            cellJson.put("accepted", cell.getRightTime() != null);
             eachArray.add(cellJson);
         }
     }
