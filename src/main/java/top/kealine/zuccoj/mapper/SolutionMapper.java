@@ -21,14 +21,14 @@ public interface SolutionMapper {
 
     @Select("SELECT solution_id solutionId, problems.problem_id problemId, username, code, submit_time submitTime, result, " +
             "memory_used memoryUsed, time_used timeUsed, code_length codeLength, lang, remark, judgehost, contest_id contestId, " +
-            "problems.title problemTitle \n" +
+            "problems.title problemTitle, score \n" +
             "FROM solutions JOIN problems ON solutions.problem_id = problems.problem_id WHERE solution_id = #{solutionId}")
     Solution getSolutionById(long solutionId);
 
 
     @Select("<script> \n" +
             "SELECT solution_id solutionId, problem_id problemId, username, submit_time submitTime, result, " +
-            "memory_used memoryUsed, time_used timeUsed, code_length codeLength, lang \n" +
+            "memory_used memoryUsed, time_used timeUsed, code_length codeLength, lang, score \n" +
             "FROM solutions \n" +
             "WHERE 1=1 \n" +
             "<if test=\"problemId != null\"> AND problem_id=#{problemId} </if> \n" +
@@ -41,7 +41,7 @@ public interface SolutionMapper {
             "</script>")
     List<SolutionStatus> getSolutionStatus(int offset, int size, Integer problemId, String username, Integer lang, Integer result,  String judgehost, Integer contestId);
 
-    @Select("SELECT solution_id solutionId, result, memory_used memoryUsed, time_used timeUsed, remark, judgehost FROM solutions WHERE solution_id = #{solutionId}")
+    @Select("SELECT solution_id solutionId, result, memory_used memoryUsed, time_used timeUsed, remark, judgehost, score, contestId FROM solutions WHERE solution_id = #{solutionId}")
     SolutionResult getSolutionResultById(long solutionId);
 
     @Select("SELECT time_limit timeLimit, memory_limit memoryLimit, solutionId, code, lang, problemId, spj FROM problems " +

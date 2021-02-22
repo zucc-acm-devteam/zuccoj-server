@@ -10,6 +10,7 @@ public class SolutionStatus {
     private int timeUsed;
     private int codeLength;
     private int lang;
+    private int score;
 
     public long getSolutionId() {
         return solutionId;
@@ -81,5 +82,13 @@ public class SolutionStatus {
 
     public void setLang(int lang) {
         this.lang = lang;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }

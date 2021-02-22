@@ -101,8 +101,8 @@ public class SolutionController {
                 int contestStatus = contestService.getContestStatus(solution.getContestId());
 
                 switch (contestType) {
-                    case ContestType.IOI:
                     case ContestType.ACM: {
+                        solution.setScore(-1);
                         break;
                     }
                     case ContestType.OI: {
@@ -111,7 +111,11 @@ public class SolutionController {
                             solution.setTimeUsed(0);
                             solution.setMemoryUsed(0);
                             solution.setRemark("");
+                            solution.setScore(-1);
                         }
+                        break;
+                    }
+                    case ContestType.IOI: {
                         break;
                     }
                 }
@@ -119,6 +123,8 @@ public class SolutionController {
                 if (contestStatus <= 0) {
                     solution.setProblemId(0);
                 }
+            } else {
+                solution.setScore(-1);
             }
             return BaseResponsePackageUtil.baseData(solution);
         } else {
@@ -154,6 +160,18 @@ public class SolutionController {
         SolutionResult result = solutionService.getSolutionResultById(solutionId);
         if (result == null) {
             return ResponseConstant.X_NOT_FOUND;
+        }
+        if (result.getContestId() != 0) {
+            int contestType = contestService.getContestType(result.getContestId());
+            int contestStatus = contestService.getContestStatus(result.getContestId());
+            if (contestType == ContestType.OI && contestStatus <= 0) {
+                return ResponseConstant.X_ACCESS_DENIED;
+            }
+            if (!(contestType == ContestType.OI || contestType == ContestType.IOI)) {
+                result.setScore(-1);
+            }
+        } else {
+            result.setScore(-1);
         }
         return BaseResponsePackageUtil.baseData(result);
     }
@@ -229,7 +247,14 @@ public class SolutionController {
                     solutionStatus.setResult(JudgeResult.UNKNOWN);
                     solutionStatus.setTimeUsed(0);
                     solutionStatus.setMemoryUsed(0);
+                    solutionStatus.setScore(-1);
                 }
+            }
+        }
+
+        if (contestId == 0 || contestType == ContestType.ICPC) {
+            for (SolutionStatus solutionStatus: statuses) {
+                solutionStatus.setScore(-1);
             }
         }
 

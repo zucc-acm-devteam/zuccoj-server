@@ -11,6 +11,7 @@ public class SolutionResult {
     private String judgehost;
     private List<Integer> passTestcase;
     private int score;
+    private int contestId;
 
     public SolutionResult() {}
     public SolutionResult(long solutionId, int result, int memoryUsed, int timeUsed, String remark, String judgehost, List<Integer> passTestcase) {
@@ -85,5 +86,13 @@ public class SolutionResult {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public int getContestId() {
+        return contestId;
+    }
+
+    public void setContestId(int contestId) {
+        this.contestId = contestId;
     }
 }

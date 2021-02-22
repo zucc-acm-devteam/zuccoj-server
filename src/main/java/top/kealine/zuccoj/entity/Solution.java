@@ -15,6 +15,7 @@ public class Solution {
     private String remark;
     private String judgehost;
     private int contestId;
+    private int score;
 
     public long getSolutionId() {
         return solutionId;
@@ -126,5 +127,13 @@ public class Solution {
 
     public void setProblemTitle(String problemTitle) {
         this.problemTitle = problemTitle;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }
