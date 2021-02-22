@@ -45,6 +45,10 @@ public class TestcaseService {
         return testcaseMapper.countTestcaseById(testcaseId)>0;
     }
 
+    public void updateTestcaseScore(int testcaseId, int score) {
+        testcaseMapper.updateTestcaseScore(testcaseId, score);
+    }
+
     public int getProblemIdByTestcaseId(int testcaseId) {
         return testcaseMapper.getProblemIdByTestcaseId(testcaseId);
     }

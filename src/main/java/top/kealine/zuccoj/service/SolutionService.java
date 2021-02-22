@@ -2,6 +2,7 @@ package top.kealine.zuccoj.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -84,12 +85,21 @@ public class SolutionService {
     }
 
     public void rejudgeSolution(long solutionId) throws JsonProcessingException {
-        SolutionResult solutionResult = new SolutionResult(solutionId, 0, 0, 0, "REJUDGING...", "REJUDGING...");
+        SolutionResult solutionResult = new SolutionResult(solutionId, -1, 0, 0, "REJUDGING...", "REJUDGING...", ImmutableList.of());
         updateSolutionResult(solutionResult);
         publishTask(solutionId);
     }
 
+    public int getTestcaseScoreFromList(List<Integer> testcases) {
+        if (testcases == null || testcases.isEmpty()) {
+            return 0;
+        } else {
+            return testcaseMapper.getTestcaseScoreFromList(testcases);
+        }
+    }
+
     public void updateSolutionResult(SolutionResult solutionResult) {
+        solutionResult.setScore(getTestcaseScoreFromList(solutionResult.getPassTestcase()));
         solutionMapper.updateSolutionResult(solutionResult);
     }
 

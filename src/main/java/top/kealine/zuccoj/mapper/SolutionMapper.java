@@ -49,7 +49,7 @@ public interface SolutionMapper {
             "ON problems.problem_id = solution.problemId")
     JudgeTask generateJudgeTask(long solutionId);
 
-    @Update("UPDATE solutions SET result=#{result}, memory_used=#{memoryUsed}, time_used=#{timeUsed}, remark=#{remark}, judgehost=#{judgehost} WHERE solution_id=#{solutionId}")
+    @Update("UPDATE solutions SET result=#{result}, memory_used=#{memoryUsed}, time_used=#{timeUsed}, remark=#{remark}, judgehost=#{judgehost}, score=#{score} WHERE solution_id=#{solutionId}")
     void updateSolutionResult(SolutionResult solutionResult);
 
     @Select("<script> \n" +

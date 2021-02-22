@@ -122,4 +122,21 @@ public class TestcaseController {
                 .contentType(MediaType.parseMediaType("application/octet-stream"))
                 .body(new FileSystemResource(file));
     }
+
+    @RequestMapping(value = "/score", method = RequestMethod.POST)
+    public Map<String, Object> updateTestcaseScore(
+            @RequestParam(name = "testcaseId", required = true) int testcaseId,
+            @RequestParam(name = "score", required = true) int score,
+            HttpServletRequest request
+    ) {
+        if (!userService.checkUserPermission(request.getSession(), PermissionLevel.ADMIN)) {
+            return ResponseConstant.X_ACCESS_DENIED;
+        }
+        if (!testcaseService.hasTestcase(testcaseId)) {
+            return ResponseConstant.X_NOT_FOUND;
+        }
+        testcaseService.updateTestcaseScore(testcaseId, score);
+        return ResponseConstant.V_UPDATE_SUCCESS;
+    }
+
 }

@@ -1,5 +1,7 @@
 package top.kealine.zuccoj.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
@@ -25,6 +27,8 @@ import top.kealine.zuccoj.util.PasswordUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -34,18 +38,21 @@ public class JudgehostController {
     private final UserService userService;
     private final TestcaseService testcaseService;
     private final SolutionService solutionService;
+    private final ObjectMapper objectMapper;
 
     @Autowired
     JudgehostController(
             JudgehostService judgehostService,
             UserService userService,
             TestcaseService testcaseService,
-            SolutionService solutionService
+            SolutionService solutionService,
+            ObjectMapper objectMapper
     ) {
         this.judgehostService = judgehostService;
         this.userService = userService;
         this.testcaseService = testcaseService;
         this.solutionService = solutionService;
+        this.objectMapper = objectMapper;
     }
 
     @RequestMapping(value = "/new", method = RequestMethod.POST)
@@ -181,15 +188,17 @@ public class JudgehostController {
             @RequestParam(name = "memoryUsed", required = true) int memoryUsed,
             @RequestParam(name = "timeUsed", required = true) int timeUsed,
             @RequestParam(name = "remark", required = true) String remark,
+            @RequestParam(name = "passTestcase", required = true) String passTestcase,
             HttpServletRequest request
-    ) {
+    ) throws JsonProcessingException {
         String ip = IpUtil.getIpAddr(request);
         String token = judgehostService.getToken(judgehost);
         if (!judgehostService.checkKey(token, key)) {
             judgehostService.log(judgehost, ip, String.format("Failed judge [700], key=%s", key));
             return ResponseConstant.X_JUDGEHOST_DUE;
         }
-        solutionService.updateSolutionResult(new SolutionResult(solutionId, result, memoryUsed, timeUsed, remark, judgehost));
+        List<Integer> passTestcaseArray = Arrays.asList(objectMapper.readValue(passTestcase, Integer[].class));
+        solutionService.updateSolutionResult(new SolutionResult(solutionId, result, memoryUsed, timeUsed, remark, judgehost, passTestcaseArray));
         judgehostService.log(judgehost, ip, String.format("Judged, solutionId=%s, result=%s, memoryUsed=%s, timeUsed=%s, remark=%s, judgehost=%s", solutionId, result, memoryUsed, timeUsed, remark, judgehost));
         return BaseResponsePackageUtil.succeedMessage();
     }

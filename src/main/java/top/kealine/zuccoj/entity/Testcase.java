@@ -9,6 +9,7 @@ public class Testcase {
     private String outputMD5;
     private long inputSize;
     private long outputSize;
+    private int score;
 
     public int getTestcaseId() {
         return testcaseId;
@@ -72,5 +73,13 @@ public class Testcase {
 
     public void setOutputSize(long outputSize) {
         this.outputSize = outputSize;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }
