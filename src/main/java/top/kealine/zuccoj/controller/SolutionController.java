@@ -222,14 +222,17 @@ public class SolutionController {
 
         }
 
+        ///////////////////////////////
         // get real data
         List<SolutionStatus> statuses = solutionService.getSolutionStatus(offset, size, problemId, username, lang, result, judgehost, contestId);
         if (statuses == null) {
             return ResponseConstant.X_NOT_FOUND;
         }
+        ///////////////////////////////
 
-        // hide some info when contest is not end
-        if (contestId != 0 && contestStatus <= 0) {
+        // hide some info in contest
+        if (contestId != 0) {
+            // translate real-problemId to problemOrder
             Map<Integer, ContestProblem> map = new HashMap<>();
             for (SolutionStatus solutionStatus: statuses) {
                 ContestProblem contestProblem = map.getOrDefault(solutionStatus.getProblemId(), null);
@@ -242,16 +245,21 @@ public class SolutionController {
                 }
                 solutionStatus.setProblemId(contestProblem.getProblemOrder());
             }
-            if (contestType == ContestType.OI) {
-                for (SolutionStatus solutionStatus: statuses) {
-                    solutionStatus.setResult(JudgeResult.UNKNOWN);
-                    solutionStatus.setTimeUsed(0);
-                    solutionStatus.setMemoryUsed(0);
-                    solutionStatus.setScore(-1);
+
+            // hide result for OI mode when contest is not end
+            if (contestStatus <= 0) {
+                if (contestType == ContestType.OI) {
+                    for (SolutionStatus solutionStatus: statuses) {
+                        solutionStatus.setResult(JudgeResult.UNKNOWN);
+                        solutionStatus.setTimeUsed(0);
+                        solutionStatus.setMemoryUsed(0);
+                        solutionStatus.setScore(-1);
+                    }
                 }
             }
         }
 
+        // hide score in ICPC and Normal
         if (contestId == 0 || contestType == ContestType.ICPC) {
             for (SolutionStatus solutionStatus: statuses) {
                 solutionStatus.setScore(-1);
