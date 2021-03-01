@@ -41,7 +41,7 @@ public interface SolutionMapper {
             "</script>")
     List<SolutionStatus> getSolutionStatus(int offset, int size, Integer problemId, String username, Integer lang, Integer result,  String judgehost, Integer contestId);
 
-    @Select("SELECT solution_id solutionId, result, memory_used memoryUsed, time_used timeUsed, remark, judgehost, score, contestId FROM solutions WHERE solution_id = #{solutionId}")
+    @Select("SELECT solution_id solutionId, result, memory_used memoryUsed, time_used timeUsed, remark, judgehost, score, contest_id contestId FROM solutions WHERE solution_id = #{solutionId}")
     SolutionResult getSolutionResultById(long solutionId);
 
     @Select("SELECT time_limit timeLimit, memory_limit memoryLimit, solutionId, code, lang, problemId, spj FROM problems " +
