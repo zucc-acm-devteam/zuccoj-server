@@ -43,10 +43,10 @@ public class Scoreboard {
                         if (o1.getPenalty() == o2.getPenalty()) {
                             return o1.getUsername().compareTo(o2.getUsername());
                         } else {
-                            return o1.getPenalty() > o2.getPenalty() ? 1 : 0;
+                            return Long.compare(o1.getPenalty(), o2.getPenalty());
                         }
                     } else {
-                        return o1.getPoint() > o2.getPoint() ? 1 : 0;
+                        return Integer.compare(o2.getPoint(), o1.getPoint());
                     }
                 };
                 break;
@@ -58,7 +58,7 @@ public class Scoreboard {
                     if (o1.getScore() == o2.getScore()) {
                         return o1.getUsername().compareTo(o2.getUsername());
                     } else {
-                        return o1.getScore() > o2.getScore() ? 1 : 0;
+                        return Long.compare(o2.getScore(), o1.getScore());
                     }
                 };
                 break;
