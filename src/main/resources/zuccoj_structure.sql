@@ -32,11 +32,7 @@ CREATE TABLE `contest`  (
   `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `contest_type` int(11) NOT NULL,
   PRIMARY KEY (`contest_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of contest
--- ----------------------------
+) ENGINE = InnoDB AUTO_INCREMENT = 0 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for contest_member
@@ -50,11 +46,7 @@ CREATE TABLE `contest_member`  (
   INDEX `fk_member_user`(`username`) USING BTREE,
   CONSTRAINT `fk_member_contest` FOREIGN KEY (`contest_id`) REFERENCES `contest` (`contest_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_member_user` FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of contest_member
--- ----------------------------
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for contest_problem
@@ -69,11 +61,7 @@ CREATE TABLE `contest_problem`  (
   INDEX `fk_contest_id`(`contest_id`) USING BTREE,
   CONSTRAINT `fk_contest_id` FOREIGN KEY (`contest_id`) REFERENCES `contest` (`contest_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_problem_id` FOREIGN KEY (`problem_id`) REFERENCES `problems` (`problem_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of contest_problem
--- ----------------------------
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for contest_type_table
@@ -83,15 +71,7 @@ CREATE TABLE `contest_type_table`  (
   `contest_type_code` int(11) NOT NULL AUTO_INCREMENT,
   `contest_type_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`contest_type_code`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of contest_type_table
--- ----------------------------
-INSERT INTO `contest_type_table` VALUES (1, 'ACM/ICPC');
-INSERT INTO `contest_type_table` VALUES (2, 'OI');
-INSERT INTO `contest_type_table` VALUES (3, 'IOI');
-INSERT INTO `contest_type_table` VALUES (4, 'Codeforces');
+) ENGINE = InnoDB AUTO_INCREMENT = 0 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for feedback
@@ -104,11 +84,7 @@ CREATE TABLE `feedback`  (
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `unread` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`feedback_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of feedback
--- ----------------------------
+) ENGINE = InnoDB AUTO_INCREMENT = 0 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for judgehost
@@ -122,12 +98,6 @@ CREATE TABLE `judgehost`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
--- Records of judgehost
--- ----------------------------
-INSERT INTO `judgehost` VALUES ('Archer', '0Y0umYU2K9UriG+zypYDVg==', '2021-02-21 07:34:38');
-INSERT INTO `judgehost` VALUES ('Koluta', '1paEwIYu65OC94DYcqmAOw==', '2021-02-21 08:50:28');
-
--- ----------------------------
 -- Table structure for judgehost_log
 -- ----------------------------
 DROP TABLE IF EXISTS `judgehost_log`;
@@ -138,11 +108,7 @@ CREATE TABLE `judgehost_log`  (
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `log_id` bigint(20) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`log_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of judgehost_log
--- ----------------------------
+) ENGINE = InnoDB AUTO_INCREMENT = 0 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for lang_table
@@ -152,14 +118,7 @@ CREATE TABLE `lang_table`  (
   `lang_code` int(11) NOT NULL AUTO_INCREMENT,
   `lang_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`lang_code`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of lang_table
--- ----------------------------
-INSERT INTO `lang_table` VALUES (1, 'C');
-INSERT INTO `lang_table` VALUES (2, 'C++');
-INSERT INTO `lang_table` VALUES (3, 'Java');
+) ENGINE = InnoDB AUTO_INCREMENT = 0 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for news
@@ -174,11 +133,7 @@ CREATE TABLE `news`  (
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`news_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of news
--- ----------------------------
+) ENGINE = InnoDB AUTO_INCREMENT = 0 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for problems
@@ -199,12 +154,7 @@ CREATE TABLE `problems`  (
   `samples` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
   PRIMARY KEY (`problem_id`) USING BTREE,
   UNIQUE INDEX `idx_problem_id`(`problem_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of problems
--- ----------------------------
-INSERT INTO `problems` VALUES (1, 'A+B Problem', '给定两个整数 $A$ 和 $B$， 计算 $A+B$ 的结果。', '输入包含两个用空格隔开的整数 $A$ 和 $B$，两个数都在 `int` 范围内。', '输出 $A+B$ 的结果', 'Enjoy ZUCC Online Judge β！ :)', 1000, 262144, NULL, 0, '[\"入门\"]', '[{\"input\":\"1 1\",\"output\":\"2\"},{\"input\":\"2 2\",\"output\":\"4\"}]');
+) ENGINE = InnoDB AUTO_INCREMENT = 0 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for result_table
@@ -215,21 +165,7 @@ CREATE TABLE `result_table`  (
   `result_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `result_short_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`result_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of result_table
--- ----------------------------
-INSERT INTO `result_table` VALUES (-1, 'Pending', 'PD');
-INSERT INTO `result_table` VALUES (1, 'Compile Error', 'CE');
-INSERT INTO `result_table` VALUES (2, 'Time Limit Exceed', 'TLE');
-INSERT INTO `result_table` VALUES (3, 'Memory Limit Exceed', 'MLE');
-INSERT INTO `result_table` VALUES (4, 'Output Limit Exceed', 'OLE');
-INSERT INTO `result_table` VALUES (5, 'Runtime Error', 'RE');
-INSERT INTO `result_table` VALUES (6, 'Wrong Answer', 'WA');
-INSERT INTO `result_table` VALUES (7, 'Accepted', 'AC');
-INSERT INTO `result_table` VALUES (8, 'Presentation Error', 'PE');
-INSERT INTO `result_table` VALUES (9, 'System Error', 'SE');
+) ENGINE = InnoDB AUTO_INCREMENT = 0 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for scoreboard
@@ -241,11 +177,7 @@ CREATE TABLE `scoreboard`  (
   `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`contest_id`) USING BTREE,
   CONSTRAINT `fk_scoreboard_contest_id` FOREIGN KEY (`contest_id`) REFERENCES `contest` (`contest_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of scoreboard
--- ----------------------------
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for solutions
@@ -276,11 +208,7 @@ CREATE TABLE `solutions`  (
   CONSTRAINT `fk_solution_problem` FOREIGN KEY (`problem_id`) REFERENCES `problems` (`problem_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_solution_result` FOREIGN KEY (`result`) REFERENCES `result_table` (`result_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_solution_user` FOREIGN KEY (`username`) REFERENCES `users` (`username`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of solutions
--- ----------------------------
+) ENGINE = InnoDB AUTO_INCREMENT = 0 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for testcases
@@ -295,14 +223,11 @@ CREATE TABLE `testcases`  (
   `output_md5` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `input_size` bigint(20) NOT NULL,
   `output_size` bigint(20) NOT NULL,
+  `score` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`testcase_id`) USING BTREE,
   INDEX `idx_problem_id`(`problem_id`) USING BTREE,
   CONSTRAINT `testcases_ibfk_1` FOREIGN KEY (`problem_id`) REFERENCES `problems` (`problem_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of testcases
--- ----------------------------
+) ENGINE = InnoDB AUTO_INCREMENT = 0 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for users
@@ -321,11 +246,6 @@ CREATE TABLE `users`  (
   `signature` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
   PRIMARY KEY (`username`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of users
--- ----------------------------
-INSERT INTO `users` VALUES ('admin', 'zuccoj@zucc.edu.cn', '10.69.255.122', '2021-02-21 10:07:02', '1998-10-11 19:30:00', 'admin', 'ZUCC Online Judge β', '9v3/5IyQjesPTDvTbAMucg==', 999, '');
 
 -- ----------------------------
 -- View structure for contest_submitter
