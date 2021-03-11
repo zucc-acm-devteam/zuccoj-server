@@ -119,10 +119,8 @@ public class SolutionController {
                         break;
                     }
                 }
-
-                if (contestStatus <= 0) {
-                    solution.setProblemId(0);
-                }
+                ContestProblem contestProblem = contestService.getContestProblemByProblemId(solution.getContestId(), solution.getProblemId());
+                solution.setProblemId(contestProblem.getProblemOrder());
             } else {
                 solution.setScore(-1);
             }
@@ -234,7 +232,7 @@ public class SolutionController {
         if (contestId != 0) {
             // translate real-problemId to problemOrder
             Map<Integer, ContestProblem> map = new HashMap<>();
-            for (SolutionStatus solutionStatus: statuses) {
+            for (SolutionStatus solutionStatus : statuses) {
                 ContestProblem contestProblem = map.getOrDefault(solutionStatus.getProblemId(), null);
                 if (contestProblem == null) {
                     contestProblem = contestService.getContestProblemByProblemId(contestId, solutionStatus.getProblemId());
@@ -249,7 +247,7 @@ public class SolutionController {
             // hide result for OI mode when contest is not end
             if (contestStatus <= 0) {
                 if (contestType == ContestType.OI) {
-                    for (SolutionStatus solutionStatus: statuses) {
+                    for (SolutionStatus solutionStatus : statuses) {
                         solutionStatus.setResult(JudgeResult.UNKNOWN);
                         solutionStatus.setTimeUsed(0);
                         solutionStatus.setMemoryUsed(0);
@@ -261,7 +259,7 @@ public class SolutionController {
 
         // hide score in ICPC and Normal
         if (contestId == 0 || contestType == ContestType.ICPC) {
-            for (SolutionStatus solutionStatus: statuses) {
+            for (SolutionStatus solutionStatus : statuses) {
                 solutionStatus.setScore(-1);
             }
         }
