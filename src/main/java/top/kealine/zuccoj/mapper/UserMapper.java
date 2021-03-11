@@ -30,7 +30,7 @@ public interface UserMapper {
             "(SELECT COUNT(DISTINCT problem_id) FROM solutions WHERE result=7 AND username=users.username) solved, \n" +
             "(SELECT COUNT(problem_id) FROM solutions WHERE result=7 AND username=users.username) accepted, \n" +
             "(SELECT COUNT(problem_id) FROM solutions WHERE username=users.username) submitted \n" +
-            "FROM users ORDER BY solved DESC, accepted DESC, submitted DESC \n" +
+            "FROM users ORDER BY solved DESC, submitted ASC \n" +
             "LIMIT #{offset}, #{size}")
     List<UserRank> getUserRank(int offset, int size);
 
