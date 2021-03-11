@@ -6,6 +6,7 @@ public class UserRank {
     private String nickname;
     private String signature;
     private int solved;
+    private int accepted;
     private int submitted;
 
     public int getRank() {
@@ -46,6 +47,14 @@ public class UserRank {
 
     public void setSolved(int solved) {
         this.solved = solved;
+    }
+
+    public int getAccepted() {
+        return accepted;
+    }
+
+    public void setAccepted(int accepted) {
+        this.accepted = accepted;
     }
 
     public int getSubmitted() {

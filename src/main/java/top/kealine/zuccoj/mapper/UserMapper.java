@@ -27,9 +27,10 @@ public interface UserMapper {
     int getUserCount();
 
     @Select("SELECT username, nickname, signature, \n" +
-            "(SELECT COUNT(problem_id) FROM solutions WHERE username=users.username) submitted, \n" +
-            "(SELECT COUNT(problem_id) FROM solutions WHERE result=7 AND username=users.username) solved \n" +
-            "FROM users ORDER BY solved DESC, submitted DESC \n" +
+            "(SELECT COUNT(DISTINCT problem_id) FROM solutions WHERE result=7 AND username=users.username) solved, \n" +
+            "(SELECT COUNT(problem_id) FROM solutions WHERE result=7 AND username=users.username) accepted, \n" +
+            "(SELECT COUNT(problem_id) FROM solutions WHERE username=users.username) submitted \n" +
+            "FROM users ORDER BY solved DESC, accepted DESC, submitted DESC \n" +
             "LIMIT #{offset}, #{size}")
     List<UserRank> getUserRank(int offset, int size);
 
