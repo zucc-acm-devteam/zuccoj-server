@@ -268,8 +268,11 @@ public class ContestController {
         if (!contest.isPublic() && ((user == null) || (!user.isAdmin() && !contestService.isMemberOfContest(contestId, user.getUsername())))) {
             return ResponseConstant.X_ACCESS_DENIED;
         }
-        List<ContestProblemInfo> contestProblemInfoList = contestService.getContestProblemInfoList(contestId, user == null ? null : user.getUsername());
         int contestStatus = contestService.getContestStatus(contestId);
+        if(!user.isAdmin() && contestStatus == -1){
+            return ResponseConstant.X_CONTEST_HAS_NOT_STARTED;
+        }
+        List<ContestProblemInfo> contestProblemInfoList = contestService.getContestProblemInfoList(contestId, user == null ? null : user.getUsername());
         if (contestStatus < 1) {
             contestProblemInfoList.forEach(ContestProblemInfo::hideProblemId);
         }
