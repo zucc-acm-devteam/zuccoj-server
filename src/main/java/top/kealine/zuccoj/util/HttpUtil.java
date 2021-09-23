@@ -18,7 +18,7 @@ public class HttpUtil {
 
     public static HttpHeaders fileHeadersUUID(String filename) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment; filename=" + filename);
+        headers.add("Content-Disposition", "inline; filename=" + filename);
         headers.add("Last-Modified", new Date().toString());
         headers.add("ETag", String.valueOf(System.currentTimeMillis()));
         return headers;
