@@ -73,4 +73,12 @@ public class ProblemService {
     public String getProblemTitle(int problemId) {
         return problemMapper.getProblemTitle(problemId);
     }
+
+    public List<ProblemInfo> searchProblemInfo(int page, int pageSize,boolean showAll, String keyWord, String userName){
+        return problemMapper.searchProblemInfo((page-1)*pageSize,pageSize,showAll,keyWord,userName);
+    }
+
+    public int getSearchProblemInfoCount(boolean showAll,String keyWord){
+        return problemMapper.getSearchProblemInfoCount(showAll,keyWord);
+    }
 }
