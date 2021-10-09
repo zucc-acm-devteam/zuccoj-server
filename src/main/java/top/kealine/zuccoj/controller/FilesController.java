@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.MediaTypeFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,18 +38,21 @@ public class FilesController {
     public ResponseEntity<FileSystemResource> download(
             @RequestParam(name = "filename", required = true) String filename
     ) {
-       if (filename == null) {
-           return ResponseEntity.badRequest().build();
-       }
-       File file = new File(filesService.getFilePath(filename));
-       if (!file.exists()) {
-           return ResponseEntity.notFound().build();
-       }
+        if (filename == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        File file = new File(filesService.getFilePath(filename));
+        if (!file.exists()) {
+            return ResponseEntity.notFound().build();
+        }
+        MediaType mediaType = MediaType.parseMediaType("application/octet-stream");
+        if (MediaTypeFactory.getMediaType(filename).isPresent())
+            mediaType = MediaTypeFactory.getMediaType(filename).get();
         return ResponseEntity
                 .ok()
                 .headers(HttpUtil.fileHeadersUUID(filename))
                 .contentLength(file.length())
-                .contentType(MediaType.parseMediaType("application/octet-stream"))
+                .contentType(mediaType)
                 .body(new FileSystemResource(file));
     }
 

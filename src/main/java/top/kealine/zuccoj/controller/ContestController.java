@@ -112,8 +112,8 @@ public class ContestController {
         List<Map> contestProblemsTitle = contestProblems
                 .stream()
                 .map(o -> ImmutableMap.of(
-                        "problemId", o.getProblemId(),
-                        "problemTitle", problemService.getProblemTitle(o.getProblemId())
+                                "problemId", o.getProblemId(),
+                                "problemTitle", problemService.getProblemTitle(o.getProblemId())
                         )
                 )
                 .collect(toList());
@@ -187,7 +187,7 @@ public class ContestController {
             pageSize = 20;
         }
         User user = userService.getUserFromSession(request.getSession());
-        List<ContestInfo> contestInfos = contestService.getContestInfoList(user==null?null:user.getUsername(), page, pageSize);
+        List<ContestInfo> contestInfos = contestService.getContestInfoList(user == null ? null : user.getUsername(), page, pageSize);
         if (userService.checkUserPermission(user, PermissionLevel.ADMIN)) {
             contestInfos.forEach(info -> info.setStatus(1));
         }
@@ -205,7 +205,7 @@ public class ContestController {
             HttpServletRequest request
     ) {
         User user = userService.getUserFromSession(request.getSession());
-        ContestInfo contestInfo = contestService.getContestInfo((user==null?null:user.getUsername()), contestId);
+        ContestInfo contestInfo = contestService.getContestInfo((user == null ? null : user.getUsername()), contestId);
         if (contestInfo == null) {
             return ResponseConstant.X_NOT_FOUND;
         }
@@ -269,7 +269,7 @@ public class ContestController {
             return ResponseConstant.X_ACCESS_DENIED;
         }
         int contestStatus = contestService.getContestStatus(contestId);
-        if(user!=null&&!user.isAdmin() && contestStatus == -1||(user==null&&contestStatus == -1)){
+        if ((user == null || !user.isAdmin()) && contestStatus == -1) {
             return ResponseConstant.X_CONTEST_HAS_NOT_STARTED;
         }
         List<ContestProblemInfo> contestProblemInfoList = contestService.getContestProblemInfoList(contestId, user == null ? null : user.getUsername());

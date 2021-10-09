@@ -142,7 +142,7 @@ DROP TABLE IF EXISTS `problems`;
 CREATE TABLE `problems`  (
   `problem_id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
+  `description` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
   `input` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
   `output` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
   `hint` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
