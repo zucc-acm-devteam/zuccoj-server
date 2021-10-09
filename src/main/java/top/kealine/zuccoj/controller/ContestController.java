@@ -269,7 +269,7 @@ public class ContestController {
             return ResponseConstant.X_ACCESS_DENIED;
         }
         int contestStatus = contestService.getContestStatus(contestId);
-        if(user!=null&&!user.isAdmin() && contestStatus == -1){
+        if(user!=null&&!user.isAdmin() && contestStatus == -1||(user==null&&contestStatus == -1)){
             return ResponseConstant.X_CONTEST_HAS_NOT_STARTED;
         }
         List<ContestProblemInfo> contestProblemInfoList = contestService.getContestProblemInfoList(contestId, user == null ? null : user.getUsername());

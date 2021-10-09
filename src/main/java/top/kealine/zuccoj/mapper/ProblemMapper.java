@@ -53,7 +53,7 @@ public interface ProblemMapper {
             "(SELECT COUNT(*) FROM solutions WHERE solutions.problem_id = problems.problem_id) submitted, \n" +
             "(SELECT COUNT(*) FROM solutions WHERE solutions.problem_id = problems.problem_id AND solutions.result = 7) solved\n" +
             "<if test=\"username != null\"> \n" +
-            ",(\n" +
+            ",( " +
             "IF ((SELECT COUNT(*) FROM solutions WHERE solutions.problem_id = problems.problem_id AND solutions.username = #{username})=0,0,\n" +
             "(IF ((SELECT COUNT(*) FROM solutions WHERE solutions.problem_id = problems.problem_id AND solutions.result = 7 AND solutions.username = #{username})>0,1,-1)))\n" +
             ") `status`\n" +
@@ -88,4 +88,30 @@ public interface ProblemMapper {
 
     @Select("SELECT title FROM problems WHERE problem_id = #{problemId}")
     String getProblemTitle(int problemId);
+
+    @Select("<script>" +
+            "select problems.problem_id problemId, title, time_limit timeLimit, memory_limit memoryLimit, tags, visible, \n" +
+            "(SELECT COUNT(*) FROM solutions WHERE solutions.problem_id = problems.problem_id) submitted, \n" +
+            "(SELECT COUNT(*) FROM solutions WHERE solutions.problem_id = problems.problem_id AND solutions.result = 7) solved\n" +
+            "<if test=\"username != null\"> \n" +
+            ",( " +
+            "IF ((SELECT COUNT(*) FROM solutions WHERE solutions.problem_id = problems.problem_id AND solutions.username = #{username})=0,0,\n" +
+            "(IF ((SELECT COUNT(*) FROM solutions WHERE solutions.problem_id = problems.problem_id AND solutions.result = 7 AND solutions.username = #{username})>0,1,-1)))\n" +
+            ") `status`\n" +
+            "</if> \n"+
+            "FROM problems \n" +
+            "WHERE 1=1\n" +
+            "<if test=\"showAll != true\"> AND problems.visible = true </if> \n" +
+            "and problems.title like binary '%${keyWord}%' or tags like binary '%${keyWord}%' \n"+
+            "ORDER BY problemId ASC\n" +
+            "LIMIT #{offset}, #{size} \n" +
+            "</script>")
+    List<ProblemInfo> searchProblemInfo(int offset, int size,boolean showAll, String keyWord, String username);
+
+    @Select("<script>"+
+            "select count(*) from problems where 1 = 1"+
+            "<if test=\"showAll != true\"> AND problems.visible = true </if> \n" +
+            "and problems.title like binary '%${keyWord}%' or tags like binary '%${keyWord}%' \n"+
+            "</script>")
+    int getSearchProblemInfoCount(boolean showAll, String keyWord);
 }
