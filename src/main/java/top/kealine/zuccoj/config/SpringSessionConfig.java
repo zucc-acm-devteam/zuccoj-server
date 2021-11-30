@@ -14,7 +14,8 @@ public class SpringSessionConfig {
     public CookieSerializer httpSessionIdResolver() {
         DefaultCookieSerializer cookieSerializer = new DefaultCookieSerializer();
         // 取消仅限同一站点设置
-        cookieSerializer.setSameSite(null);
+        cookieSerializer.setSameSite("None");
+        cookieSerializer.setUseSecureCookie(true);
         return cookieSerializer;
     }
 }
