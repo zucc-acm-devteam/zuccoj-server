@@ -196,4 +196,22 @@ public class ProblemController {
         }
         return BaseResponsePackageUtil.baseData(title);
     }
+
+    @RequestMapping(value = "/searchProblemInfo", method = RequestMethod.GET)
+    public Map<String, Object> searchProblemInfo(
+            @RequestParam(name = "page", required = true) int page,
+            @RequestParam(name = "pageSize", required = true) int pageSize,
+            @RequestParam(name = "keyWord") String keyWord,
+            HttpServletRequest request
+    ){
+        User user = userService.getUserFromSession(request.getSession());
+        boolean showAll = userService.checkUserPermission(user, PermissionLevel.ADMIN);
+        String username = user == null ? null : user.getUsername();
+        return BaseResponsePackageUtil.baseData(
+                ImmutableMap.of(
+                        "problems", problemService.searchProblemInfo(page,pageSize,showAll,keyWord,username),
+                        "count", problemService.getSearchProblemInfoCount(showAll,keyWord),
+                        "page", page
+                ));
+    }
 }
