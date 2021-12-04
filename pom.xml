@@ -10,7 +10,7 @@
     </parent>
     <groupId>top.kealine</groupId>
     <artifactId>zuccoj-server</artifactId>
-    <version>0.2.3.RELEASE</version>
+    <version>0.2.4.RELEASE</version>
     <name>zuccoj-server</name>
     <description>Server for ZUCC-Online-Judge</description>
 
@@ -101,6 +101,14 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-mock</artifactId>
             <version>2.0.8</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
     </dependencies>
 

@@ -1,6 +1,14 @@
 package top.kealine.zuccoj.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.ImmutableMap;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClients;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,9 +24,10 @@ import top.kealine.zuccoj.service.CaptchaService;
 import top.kealine.zuccoj.service.UserService;
 import top.kealine.zuccoj.util.BaseResponsePackageUtil;
 import top.kealine.zuccoj.util.IpUtil;
-import top.kealine.zuccoj.util.PasswordUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -58,12 +67,48 @@ public class UserController {
         if (!userService.checkUser(user, password)) {
             return ResponseConstant.X_USER_WRONG_PASSWORD;
         }
-        if(!userService.checkUserPermission(user, PermissionLevel.COMMON)) {
+        if (!userService.checkUserPermission(user, PermissionLevel.COMMON)) {
             return ResponseConstant.X_USER_FORBIDDEN;
         }
         userService.saveUserToSession(request.getSession(), user);
         userService.userAccess(username, IpUtil.getIpAddr(request));
         return ResponseConstant.V_USER_LOGIN_SUCCESS;
+    }
+
+    @RequestMapping(value = "/ssoLogin", method = RequestMethod.POST)
+    public Map<String, Object> ssoLogin(
+            @RequestParam(name = "username", required = true) String username,
+            @RequestParam(name = "ticket", required = true) String ticket,
+            HttpServletRequest request
+    ) {
+        String checkUrl = "https://api.zuccacm.top/sso/v1/ticket/check";
+        HttpClient client = HttpClients.createDefault();
+        HttpPost post = new HttpPost(checkUrl);
+        ObjectNode jsonNode = new ObjectMapper().createObjectNode();
+        jsonNode.put("username", username);
+        jsonNode.put("ticket", ticket);
+        try {
+            post.addHeader("Content-type", "application/json; charset=utf-8");
+            post.setHeader("Accept", "application/json");
+            post.setEntity(new StringEntity(jsonNode.toString(), StandardCharsets.UTF_8));
+            HttpResponse httpResponse = client.execute(post);
+            if (httpResponse.getStatusLine().getStatusCode() != 200) {
+                return ResponseConstant.X_SSO_CHECK_FAILED;
+            }
+        } catch (IOException e) {
+            return ResponseConstant.X_SSO_CHECK_FAILED;
+        }
+        if (!userService.hasUser(username)){
+            String password = RandomStringUtils.randomAlphanumeric(20);
+            userService.newUser(username, username, password, "", "");
+        }
+        User user = userService.getUserByUsername(username);
+        if (!userService.checkUserPermission(user, PermissionLevel.COMMON)) {
+            return ResponseConstant.X_USER_FORBIDDEN;
+        }
+        userService.saveUserToSession(request.getSession(), user);
+        userService.userAccess(username, IpUtil.getIpAddr(request));
+        return ResponseConstant.V_SSO_LOGIN_SUCCESS;
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
@@ -108,9 +153,9 @@ public class UserController {
             @RequestParam(name = "page", required = true) int page,
             @RequestParam(name = "pageSize", required = true) int pageSize
     ) {
-        int begin = (page-1)*pageSize;
+        int begin = (page - 1) * pageSize;
         List<UserRank> userRanks = userService.getUserRank(page, pageSize);
-        for (UserRank rank:userRanks) {
+        for (UserRank rank : userRanks) {
             rank.setRank(++begin);
         }
         return BaseResponsePackageUtil.baseData(ImmutableMap.of(
@@ -161,7 +206,7 @@ public class UserController {
             HttpServletRequest request
     ) {
         User user = userService.getUserFromSession(request.getSession());
-        if ((user==null) || !(user.isAdmin() || user.getUsername().equals(username))) {
+        if ((user == null) || !(user.isAdmin() || user.getUsername().equals(username))) {
             return ResponseConstant.X_ACCESS_DENIED;
         }
         UserEdit userEdit = userService.getUserEdit(username);

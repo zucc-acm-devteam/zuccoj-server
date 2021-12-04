@@ -19,6 +19,10 @@ public class ResponseConstant {
 
     public static final Map<String, Object> X_ACCESS_DENIED = BaseResponsePackageUtil.errorMessage("访问受限", 403);
 
+    // SSO
+    public static final Map<String, Object> V_SSO_LOGIN_SUCCESS = BaseResponsePackageUtil.succeedMessage("单点登录成功");
+    public static final Map<String, Object> X_SSO_CHECK_FAILED = BaseResponsePackageUtil.errorMessage("验证失败");
+
     // Upload
     public static final Map<String, Object> X_UPLOAD_FAILED = BaseResponsePackageUtil.errorMessage("上传失败");
     public static final Map<String, Object> V_UPLOAD_SUCCESS = BaseResponsePackageUtil.succeedMessage("上传成功");
