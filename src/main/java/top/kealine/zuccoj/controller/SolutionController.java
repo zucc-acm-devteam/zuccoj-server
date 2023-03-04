@@ -76,7 +76,7 @@ public class SolutionController {
                 return ResponseConstant.X_ACCESS_DENIED;
             }
         }
-
+        //创建一次提交
         long solutionId = solutionService.newSolution(problemId, user.getUsername(), code, lang, 0);
         return BaseResponsePackageUtil.baseData(ImmutableMap.of("solutionId", solutionId));
     }

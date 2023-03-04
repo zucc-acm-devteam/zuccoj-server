@@ -1,6 +1,7 @@
 package top.kealine.zuccoj.service;
 
 import com.google.common.collect.ImmutableList;
+import net.lingala.zip4j.ZipFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -98,6 +99,24 @@ public class TestcaseService {
                 String outputFile = unzipDir + testcase.getKey() + ".ans";
                 int testcaseId = newTestcase(problemId, ServerFileUtil.fileToMultipartFile(inputFile), ServerFileUtil.fileToMultipartFile(outputFile));
                 result.add(String.format("testcaseId = %s, inputFile = %s, outputFile = %s", testcaseId, testcase.getKey()+".in", testcase.getKey()+testcase.getValue()));
+            }
+            return result.build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ImmutableList.of();
+        }
+    }
+
+    public List<String> newTestcaseByPolygonZip(int problemId,String fullPath){
+        try {
+            List<String> unZipResult = ZipUtil.unzipTestcasePackageFromPolygon(fullPath);
+            String unzipDir = ServerFileUtil.getFilenameWithoutExtend(fullPath) + onlineJudgeConfig.separator;
+            ImmutableList.Builder<String> result = ImmutableList.builder();
+            for(String testcase: unZipResult) {
+                String inputFile = unzipDir + testcase + ".in";
+                String outputFile = unzipDir + testcase + ".ans";
+                int testcaseId = newTestcase(problemId, ServerFileUtil.fileToMultipartFile(inputFile), ServerFileUtil.fileToMultipartFile(outputFile));
+                result.add(String.format("testcaseId = %s, inputFile = %s, outputFile = %s", testcaseId, testcase+".in", testcase+".ans"));
             }
             return result.build();
         } catch (Exception e) {

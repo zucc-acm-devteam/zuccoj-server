@@ -46,6 +46,7 @@ class ServerApplicationTests {
     TestcaseMapper testcaseMapper;
     @Test
     void caseSumScoreTest() {
-        System.out.println(testcaseMapper.getTestcaseScoreFromList(ImmutableList.of(19, 20)));
+        testcaseMapper.countTestcaseById(1001);
+//        System.out.println(testcaseMapper.getTestcaseScoreFromList(ImmutableList.of(19, 20)));
     }
 }

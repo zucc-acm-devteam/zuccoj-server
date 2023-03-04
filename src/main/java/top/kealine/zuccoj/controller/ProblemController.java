@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import top.kealine.zuccoj.constant.PermissionLevel;
 import top.kealine.zuccoj.constant.ResponseConstant;
 import top.kealine.zuccoj.entity.Problem;
@@ -13,11 +14,13 @@ import top.kealine.zuccoj.entity.ProblemDisplay;
 import top.kealine.zuccoj.entity.ProblemInfo;
 import top.kealine.zuccoj.entity.User;
 import top.kealine.zuccoj.service.ProblemService;
+import top.kealine.zuccoj.service.TestcaseService;
 import top.kealine.zuccoj.service.UserService;
 import top.kealine.zuccoj.util.BaseResponsePackageUtil;
 import top.kealine.zuccoj.util.ProblemUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -26,10 +29,13 @@ public class ProblemController {
     private final UserService userService;
     private final ProblemService problemService;
 
+    private final TestcaseService testcaseService;
+
     @Autowired
-    ProblemController(UserService userService, ProblemService problemService) {
+    ProblemController(UserService userService, ProblemService problemService,TestcaseService testcaseService) {
         this.userService = userService;
         this.problemService = problemService;
+        this.testcaseService = testcaseService;
     }
 
     @RequestMapping(value = "/getProblemListForAdmin", method = {RequestMethod.GET, RequestMethod.POST})
@@ -46,7 +52,7 @@ public class ProblemController {
                         "problems", problemService.getProblemListForAdmin(page, pageSize),
                         "count", problemService.getProblemsCount(),
                         "page", page
-                        ));
+                ));
     }
 
     @RequestMapping(value = "/new", method = RequestMethod.POST)
@@ -72,6 +78,26 @@ public class ProblemController {
         return BaseResponsePackageUtil.baseData(
                 ImmutableMap.of("problemId", problemId)
         );
+    }
+
+
+    @RequestMapping(value = "/new/polygon",method = RequestMethod.POST)
+    public Map<String,Object> newOneByPolygonZip(
+            @RequestParam(name = "zip", required = true) MultipartFile zip,
+            HttpServletRequest request
+    ){
+//        if (!userService.checkUserPermission(request.getSession(), PermissionLevel.ADMIN)) {
+//            return ResponseConstant.X_ACCESS_DENIED;
+//        }
+        Map<String,Object> map = problemService.newProblemByPolygon(zip);
+        Integer problemId = (Integer) map.get("problemId");
+        String zipPath = (String) map.get("ZipFullPath");
+        List<String> list = testcaseService.newTestcaseByPolygonZip(problemId, zipPath);
+        return BaseResponsePackageUtil.baseData(
+                ImmutableMap.of(
+                        "problemId",problemId,
+                        "testCase",list
+                ));
     }
 
     @RequestMapping(value = "/get", method = RequestMethod.GET)
@@ -203,14 +229,14 @@ public class ProblemController {
             @RequestParam(name = "pageSize", required = true) int pageSize,
             @RequestParam(name = "keyWord") String keyWord,
             HttpServletRequest request
-    ){
+    ) {
         User user = userService.getUserFromSession(request.getSession());
         boolean showAll = userService.checkUserPermission(user, PermissionLevel.ADMIN);
         String username = user == null ? null : user.getUsername();
         return BaseResponsePackageUtil.baseData(
                 ImmutableMap.of(
-                        "problems", problemService.searchProblemInfo(page,pageSize,showAll,keyWord,username),
-                        "count", problemService.getSearchProblemInfoCount(showAll,keyWord),
+                        "problems", problemService.searchProblemInfo(page, pageSize, showAll, keyWord, username),
+                        "count", problemService.getSearchProblemInfoCount(showAll, keyWord),
                         "page", page
                 ));
     }

@@ -31,12 +31,12 @@ public interface ProblemMapper {
     List<ProblemInAdmin> getProblemListForAdmin(int offset, int size);
 
 
-    @Insert("INSERT INTO problems(title, description, input, output, hint, time_limit, memory_limit, spj, visible, samples, tags) " +
-            "VALUES(#{title}, #{description}, #{input}, #{output}, #{hint}, #{timeLimit}, #{memoryLimit}, #{spj}, #{visible}, #{samples}, #{tags})")
+    @Insert("INSERT INTO problems(title, description, input, output, hint, time_limit, memory_limit, spj, visible, samples, tags, is_polygon) " +
+            "VALUES(#{title}, #{description}, #{input}, #{output}, #{hint}, #{timeLimit}, #{memoryLimit}, #{spj}, #{visible}, #{samples}, #{tags}, #{isPolygon})")
     @Options(useGeneratedKeys = true, keyProperty = "problemId")
     void newProblem(Problem problem);
 
-    @Select("SELECT problem_id problemId, title, description, input, output, hint, time_limit timeLimit, memory_limit memoryLimit, \n" +
+    @Select("SELECT problem_id problemId, title, description, input, output, hint, time_limit timeLimit, memory_limit memoryLimit, is_polygon isPolygon, \n" +
             "spj, visible, samples, tags FROM problems WHERE problem_id=#{problemId}")
     Problem getProblemById(int problemId);
 
@@ -82,7 +82,7 @@ public interface ProblemMapper {
     ProblemInfo getProblemInfo(int problemId);
 
 
-    @Select("SELECT problem_id problemId, title, time_limit timeLimit, memory_limit memoryLimit, description, input, output, hint, samples, visible \n" +
+    @Select("SELECT problem_id problemId, title, time_limit timeLimit, memory_limit memoryLimit, description, input, output, hint, samples, visible, is_polygon isPolygon \n" +
             "FROM problems WHERE problem_id = #{problemId}")
     ProblemDisplay getProblemDisplay(int problemId);
 
