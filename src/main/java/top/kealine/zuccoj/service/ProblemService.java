@@ -1,16 +1,20 @@
 package top.kealine.zuccoj.service;
 
+import ch.qos.logback.core.rolling.helper.FileStoreUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import top.kealine.zuccoj.config.OnlineJudgeConfig;
 import top.kealine.zuccoj.entity.Problem;
 import top.kealine.zuccoj.entity.ProblemDisplay;
 import top.kealine.zuccoj.entity.ProblemInAdmin;
 import top.kealine.zuccoj.entity.ProblemInfo;
 import top.kealine.zuccoj.mapper.ProblemMapper;
+import top.kealine.zuccoj.util.ProblemUtil;
+import top.kealine.zuccoj.util.ServerFileUtil;
 
 import java.io.File;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ProblemService {
@@ -80,5 +84,22 @@ public class ProblemService {
 
     public int getSearchProblemInfoCount(boolean showAll,String keyWord){
         return problemMapper.getSearchProblemInfoCount(showAll,keyWord);
+    }
+
+    public Map<String,Object> newProblemByPolygon(MultipartFile zip){
+        String name = UUID.randomUUID().toString() + ".zip";
+        String path = onlineJudgeConfig.tempDir + name;
+        try {
+            ServerFileUtil.save(zip,path);
+            Problem problem = ProblemUtil.packageUpByZip(path, ServerFileUtil.getFilenameWithoutExtend(Objects.requireNonNull(zip.getOriginalFilename())));
+            problemMapper.newProblem(problem);
+            newProblemDataDir(problem.getProblemId());
+            Map<String,Object> map = new HashMap<>();
+            map.put("problemId",problem.getProblemId());
+            map.put("ZipFullPath",path);
+            return map;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

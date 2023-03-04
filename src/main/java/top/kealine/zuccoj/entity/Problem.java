@@ -13,6 +13,7 @@ public class Problem{
     private boolean visible;
     private String samples;
     private String tags;
+    private Integer isPolygon;
 
     public int getProblemId() {
         return problemId;
@@ -108,5 +109,13 @@ public class Problem{
 
     public void setTags(String tags) {
         this.tags = tags;
+    }
+
+    public Integer getIsPolygon() {
+        return isPolygon;
+    }
+
+    public void setIsPolygon(Integer isPolygon) {
+        this.isPolygon = isPolygon;
     }
 }

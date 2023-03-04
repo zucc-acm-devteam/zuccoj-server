@@ -12,6 +12,8 @@ public class ProblemDisplay {
     private String samples;
     private boolean visible;
 
+    private Integer isPolygon;
+
     public int getProblemId() {
         return problemId;
     }
@@ -90,5 +92,13 @@ public class ProblemDisplay {
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    public Integer getIsPolygon() {
+        return isPolygon;
+    }
+
+    public void setIsPolygon(Integer isPolygon) {
+        this.isPolygon = isPolygon;
     }
 }

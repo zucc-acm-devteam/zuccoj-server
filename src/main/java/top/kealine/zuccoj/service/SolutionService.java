@@ -46,6 +46,7 @@ public class SolutionService {
         solution.setCodeLength(code.length());
         solution.setContestId(contestId);
         solutionMapper.newSolution(solution);
+        //发送消息到消息队列，key为JUDGE_TASK_QUEUE_KEY，judgehost后台消费消息
         publishTask(solution.getSolutionId());
         return solution.getSolutionId();
     }
